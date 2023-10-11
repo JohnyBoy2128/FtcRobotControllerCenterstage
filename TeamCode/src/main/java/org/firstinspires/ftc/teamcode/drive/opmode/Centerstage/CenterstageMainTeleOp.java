@@ -24,7 +24,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
 
     // the power of the motors are multiplied by this
-    double motorPowerFactor = 0.8;
+    double motorPowerFactor = 1;
 
     /*
 
