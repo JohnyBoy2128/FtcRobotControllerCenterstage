@@ -149,7 +149,7 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
         motorBL.setPower(leftPower);
         motorBR.setPower(rightPower);
 
-        //originally commented
+        //add motor power telemetry
         telemetry.addData("leftPower", leftPower);
         telemetry.addData("rightPower", rightPower);
 
