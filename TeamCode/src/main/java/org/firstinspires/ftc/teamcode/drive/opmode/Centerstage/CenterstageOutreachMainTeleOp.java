@@ -56,6 +56,7 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
             calcMotorPowerFactor();
             updateDriveMotors();
 
+
             // do telemetry
             doTelem();
         }
@@ -73,7 +74,6 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
         // reverses some of the motor directions
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorBL.setDirection(DcMotor.Direction.REVERSE);
-        //slideR.setDirection(DcMotor.Direction.REVERSE);
 
         // use braking to slow the drive motors down faster
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -155,6 +155,24 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
 
         telemetry.addData("y", y);
         telemetry.addData("rx", rx);
+    }
+
+    public void planeLauncher() {
+        String controller = gamepad1.toString().toLowerCase();
+        telemetry.addData("Gamepad Status", controller);
+        telemetry.update();
+
+        double power = 0;
+
+        if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
+            power = 0;
+        }
+        if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
+            power = 1;
+        }
+
+        motorFR.setPower(power);
+        //ID: xxxx user: 1 lx: 0.00ly: 0.00rx: 0.00ry: 0.00 rt:0.00
     }
 
     // does the telemetry
