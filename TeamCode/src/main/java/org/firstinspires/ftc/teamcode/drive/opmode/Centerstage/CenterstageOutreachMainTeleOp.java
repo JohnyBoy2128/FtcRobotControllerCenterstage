@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -17,6 +18,8 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
     private DcMotor motorFL = null;
     private DcMotor motorBR = null;
     private DcMotor motorBL = null;
+    private DcMotor motorPlane = null;
+    private Servo servoPlane = null;
 
 
     // the power of the motors are multiplied by this
@@ -32,7 +35,7 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
     public void runOpMode() { //---------------PRESSES INITIALIZE---------------
 
         // initialize the motors
-        initMotors();
+        initMotorsAndServos();
 
         // adds telemetry that the robot has been initialized
         telemetry.addData("Status", "Initialized");
@@ -56,6 +59,9 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
             calcMotorPowerFactor();
             updateDriveMotors();
 
+            // does servo and motors for plane launcher
+            planeLauncher();
+
 
             // do telemetry
             doTelem();
@@ -63,13 +69,15 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
     }
 
     // initialize the motors
-    public void initMotors() {
+    public void initMotorsAndServos() {
 
         // initialize the motor hardware variables
         motorFR = hardwareMap.get(DcMotor.class, "FR");
         motorFL = hardwareMap.get(DcMotor.class, "FL");
         motorBL = hardwareMap.get(DcMotor.class, "BL");
         motorBR = hardwareMap.get(DcMotor.class, "BR");
+        motorPlane = hardwareMap.get(DcMotor.class, "planeLauncher");
+        servoPlane = hardwareMap.get(Servo.class, "planeTrigger");
 
         // reverses some of the motor directions
         motorFL.setDirection(DcMotor.Direction.REVERSE);
@@ -158,21 +166,32 @@ public class CenterstageOutreachMainTeleOp extends LinearOpMode {
     }
 
     public void planeLauncher() {
-        String controller = gamepad1.toString().toLowerCase();
-        telemetry.addData("Gamepad Status", controller);
-        telemetry.update();
 
         double power = 0;
+        double position;
+        double servoPosition = servoPlane.getPosition();
 
-        if (currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
+
+        // conditional for motor power to launch plane
+        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
             power = 0;
         }
-        if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
             power = 1;
         }
+        // conditional to trigger lane launcher mechanism
+        if (currentGamepad1.square && !previousGamepad1.square) {
+            position = 0;
+            servoPlane.setPosition(position);
+        }
+        if (currentGamepad1.triangle && !previousGamepad1.triangle) {
+            position = .25;
+            servoPlane.setPosition(position);
+        }
 
-        motorFR.setPower(power);
-        //ID: xxxx user: 1 lx: 0.00ly: 0.00rx: 0.00ry: 0.00 rt:0.00
+        motorPlane.setPower(power);
+
+
     }
 
     // does the telemetry

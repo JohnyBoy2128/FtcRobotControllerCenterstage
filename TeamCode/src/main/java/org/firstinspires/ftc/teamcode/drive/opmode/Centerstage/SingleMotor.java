@@ -54,27 +54,30 @@ public class SingleMotor extends LinearOpMode {
                 // currentGamepad1 are being copied from valid Gamepads
             }
 
-            // Rising edge detector for right bumper on gp2.
+            //condition tree for setting motor powers using dpad
             if (currentGamepad1.dpad_down) {
                 actuator.setPower(0);
-            }
-            if (currentGamepad1.dpad_left) {
-                actuator.setPower(.5);
-            }
-            if (currentGamepad1.dpad_right) {
-                actuator.setPower(.75);
-            }
-            if (currentGamepad1.dpad_up) {
+            } else if (currentGamepad1.dpad_left) {
+                actuator.setPower(0.5);
+            } else if (currentGamepad1.dpad_right) {
+                actuator.setPower(0.75);
+            } else if (currentGamepad1.dpad_up) {
                 actuator.setPower(1);
-            }
-            if (lsy >= 0) {
+            } else if (lsy >= 0) {
                 actuator.setPower(lsy);
+            } else {
+                // Default condition if none of the above are true
+                actuator.setPower(0);
             }
+
             if (currentGamepad1.right_bumper) {
                 trigger.setPosition(1);
-            }
-            if (currentGamepad1.triangle) {
+            } else {
                 trigger.setPosition(.5);
+            }
+
+            if (currentGamepad1.triangle) {
+                trigger.setPosition(0);
             }
 
             String controller = gamepad1.toString();
