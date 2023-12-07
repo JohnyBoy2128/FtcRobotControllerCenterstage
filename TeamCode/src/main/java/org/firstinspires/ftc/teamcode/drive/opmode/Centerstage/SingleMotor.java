@@ -72,11 +72,11 @@ public class SingleMotor extends LinearOpMode {
 
             if (currentGamepad1.right_bumper) {
                 trigger.setPosition(1);
-            } else {
+            } else if (currentGamepad1.circle) {
                 trigger.setPosition(.5);
             }
 
-            if (currentGamepad1.triangle) {
+            else if (currentGamepad1.triangle) {
                 trigger.setPosition(0);
             }
 

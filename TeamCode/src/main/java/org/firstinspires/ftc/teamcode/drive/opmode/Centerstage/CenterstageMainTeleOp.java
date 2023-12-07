@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="CS: 1 Driver TeleOp", group="Linear Opmode")
@@ -16,35 +17,41 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     private DcMotor motorFL = null;
     private DcMotor motorBR = null;
     private DcMotor motorBL = null;
-
-    //private DcMotor slideL = null;
-    //private DcMotor slideR = null;
-    //private Servo grabberL = null;
-    //private Servo grabberR = null;
+    private DcMotor motorActuator = null;
+    private DcMotor motorWormGear = null;
+    private Servo servoGrabberL = null;
+    private Servo servoGrabberR = null;
+    private Servo servoRotatorL = null;
+    private Servo servoRotatorR = null;
 
 
     // the power of the motors are multiplied by this
     double motorPowerFactor = 1;
 
-    /*
+    // variables for servo positions
+    double positionL = 0;
+    double positionR = 0;
 
-    // how many encoder tics make one full slide motor rotation
-    static final double SLIDE_TICS_IN_ROT = 384.5;
+
+
+    // how many encoder tics make one full actuator motor rotation
+    static final double ARM_TICS_IN_ROT = 537.7;
     // the number of mm the slides move from one motor rotation
     static final double SLIDE_MM_FROM_ROT = 116;
     // number of tics to move slide by 1cm
-    static final double SLIDE_TICS_IN_CM = SLIDE_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
+    static final double SLIDE_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
 
     // the slide's level; 0-3, 0 being ground, 3 being highest pole
     int slideLvl = 0;
 
 
-     */
+
 
     // copies of the gamepad
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad previousGamepad1 = new Gamepad();
-
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
 
     @Override
     public void runOpMode() { //---------------PRESSES INITIALIZE---------------
@@ -64,10 +71,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         runtime.reset();
 
         // enables pwm for the grabber servos
-        /*
-        grabberL.getController().pwmEnable();
-        grabberR.getController().pwmEnable();
-         */
+
+        servoGrabberL.getController().pwmEnable();
+        servoGrabberR.getController().pwmEnable();
+
 
         // runs until the end of the match (driver presses STOP)
         while (opModeIsActive()) { //---------------PRESSES PLAY---------------
@@ -76,33 +83,102 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
             // does the drive motor stuff
             calcMotorPowerFactor();
-            updateDriveMotors();
+            //updateDriveMotors();
 
             // updates the grabber
-            //updateGrabberServoMode();
+            updateGrabberServos();
 
-            // updates the slides level
-            //updateSlidesLvl();
+            //calibrateServos();
+
+
+            // updates the arm motors
+            updateArmMotors();
 
             // do telemetry
             doTelem();
+
         }
     }
+
+    // method to find out servo directions and such
+    public void calibrateServos() {
+
+        if (currentGamepad1.cross) {
+            positionL = 0;
+        }
+        else if (currentGamepad1.square) {
+            positionL = 0.5;
+        }
+        /*
+        // conditional to trigger lane launcher mechanism
+        else if (currentGamepad1.circle && !previousGamepad1.circle) {
+            positionL = 1;
+        }
+        else if (currentGamepad1.triangle && !previousGamepad1.triangle) {
+            positionL = 0.9;
+        }
+        */
+
+        servoGrabberL.setPosition(positionL);
+
+
+        if (currentGamepad2.cross && !previousGamepad2.cross) {
+            positionR = 0;
+            servoGrabberR.setPosition(0);
+        }
+        else if (currentGamepad2.square && !previousGamepad2.square) {
+            positionR = 0.1;
+            servoGrabberR.setPosition(0.1);
+        }
+        // conditional to trigger lane launcher mechanism
+        else if (currentGamepad2.circle && !previousGamepad2.circle) {
+            positionR = 1;
+            servoGrabberR.setPosition(1);
+        }
+        else if (currentGamepad2.triangle && !previousGamepad2.triangle) {
+            positionR = 0.9;
+            servoGrabberR.setPosition(0.9);
+        }
+
+        telemetry.addData("grabberL Position", positionL);
+        //servoGrabberR.setPosition(positionR);
+
+    }
+
+    public void calibrateMotors() {
+
+
+
+    }
+
+    //CODE BELOW IS FINAL
+
 
     // initialize the motors and servos
     public void initMotorsAndServos() {
         // initialize the motor hardware variables
+                //DRIVE MOTORS
         motorFR = hardwareMap.get(DcMotor.class, "FR");
         motorFL = hardwareMap.get(DcMotor.class, "FL");
         motorBL = hardwareMap.get(DcMotor.class, "BL");
         motorBR = hardwareMap.get(DcMotor.class, "BR");
-        //slideL = hardwareMap.get(DcMotor.class, "slideL");
-        //slideR = hardwareMap.get(DcMotor.class, "slideR");
+
+                //ARM MOTORS
+        motorActuator = hardwareMap.get(DcMotor.class, "actuator");
+        motorWormGear = hardwareMap.get(DcMotor.class, "wormy");
+
+                //GRABBER SERVOS
+        servoGrabberL = hardwareMap.get(Servo.class, "grabberL");
+        servoGrabberR = hardwareMap.get(Servo.class, "grabberR");
+        servoRotatorL = hardwareMap.get(Servo.class, "rotatorL");
+        servoRotatorR = hardwareMap.get(Servo.class, "rotatorR");
+
+
+
 
         // reverses some of the motor directions
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorBL.setDirection(DcMotor.Direction.REVERSE);
-        //slideR.setDirection(DcMotor.Direction.REVERSE);
 
         // use braking to slow the drive motors down faster
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -110,7 +186,15 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        /*
+        motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorWormGear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorActuator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorWormGear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
+
+        /* MAY USE THIS FOR ARM MOTORS/SERVOS
 
         slideL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -139,6 +223,20 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             // Swallow the possible exception, it should not happen as
             // currentGamepad1 are being copied from valid Gamepads
         }
+
+        try {
+            // Store the gamepad values from the previous loop iteration in
+            // previousGamepad2 to be used in this loop iteration
+            previousGamepad2.copy(currentGamepad2);
+
+            // Store the gamepad values from this loop iteration in
+            // currentGamepad2 to be used for the entirety of this loop iteration
+            currentGamepad2.copy(gamepad2);
+        }
+        catch (Exception e) {
+            // Swallow the possible exception, it should not happen as
+            // currentGamepad1 are being copied from valid Gamepads
+        }
     }
 
     // calculates/updates motorPowerFactor
@@ -161,38 +259,14 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         double lsx = gamepad1.left_stick_x;
         double rsx = gamepad1.right_stick_x;
 
-        // disregards lsy or lsx if their absolute value is less than 0.1
-        if (Math.abs(lsy) < 0.1) {
-            lsy = 0.0;
-        }
-        if (Math.abs(lsx) < 0.1) {
-            lsx = 0.0;
-        }
+        double y = gamepadSticksMath(lsy);
+        double x = gamepadSticksMath(lsx);
+        double rx = gamepadSticksMath(rsx);
 
-        // gets the signs of the stick values
-        double lsySign = lsy / Math.abs(lsy);
-        double lsxSign = lsx / Math.abs(lsx);
-        double rsxSign = rsx / Math.abs(rsx);
-
-        // ensures the stick value signs aren't NaN
-        if (Double.isNaN(lsySign)) {lsySign = 0;}
-        if (Double.isNaN(lsxSign)) {lsxSign = 0;}
-        if (Double.isNaN(rsxSign)) {rsxSign = 0;}
-
-        // joystick values used to determine drive movement
-        // they're squared to allow for finer control at low speeds
-        double y = Math.pow(lsy, 2) * lsySign;
-        double x = Math.pow(lsx, 2) * lsxSign;
-        double rx = Math.pow(rsx, 2) * rsxSign;
-
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio, but only when
-        // at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double powerFR = ((y - x - rx) / denominator) * motorPowerFactor;
-        double powerFL = ((y + x + rx) / denominator) * motorPowerFactor;
-        double powerBL = ((y - x + rx) / denominator) * motorPowerFactor;
-        double powerBR = ((y + x - rx) / denominator) * motorPowerFactor;
+        double powerFR = (y - x - rx) * motorPowerFactor;
+        double powerFL = (y + x + rx) * motorPowerFactor;
+        double powerBL = (y - x + rx) * motorPowerFactor;
+        double powerBR = (y + x - rx) * motorPowerFactor;
 
         // Send calculated power to wheels
         motorFR.setPower(powerFR);
@@ -211,25 +285,44 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         telemetry.addData("rx", rx);
     }
 
-    /*
-
     // updates the grabber position if in regular servo mode
-    public void updateGrabberServoMode() {
+    public void updateGrabberServos() {
+
+
         // Rising edge detector for right bumper.
         // This moves to the closed position.
         if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-            grabberL.setPosition(0.285); // smaller = closed
-            grabberR.setPosition(0.757); // larger = closed
+            servoGrabberL.setPosition(0.16); // smaller = closed
+            servoGrabberR.setPosition(0.93); // larger = closed
         }
 
         // Rising edge detector for left bumper.
         // This moves to the open position.
         if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-            grabberL.setPosition(0.41); // smaller = closed
-            grabberR.setPosition(0.631); // larger = closed
+            servoGrabberL.setPosition(0.29); // smaller = closed
+            servoGrabberR.setPosition(0.79); // larger = closed
         }
+
+
+
+        // Code used to calibrate the servo positions for open and closed
+        /*
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
+            // right bumper pressed, increase servo position
+            servoGrabberL.setPosition(servoGrabberL.getPosition() + 0.01);
+            servoGrabberR.setPosition(servoGrabberR.getPosition() + 0.01);
+        }
+        else if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
+            // left bumper pressed, decrease servo position
+            servoGrabberL.setPosition(servoGrabberL.getPosition() - 0.01);
+            servoGrabberR.setPosition(servoGrabberR.getPosition() - 0.01);
+        }
+
+         */
+
     }
 
+    /*
     // updates the grabber position if in continuous rotation mode
     public void updateGrabberContinuousMode() {
         if (currentGamepad1.right_bumper && !currentGamepad1.left_bumper) {
@@ -307,6 +400,108 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
      */
 
+    // updates the actuator and the worm gear to move the arm out and around
+    public void updateArmMotors() {
+
+        int currentActuatorPosition = motorActuator.getCurrentPosition();
+        telemetry.addData("currentActuatorPosition", currentActuatorPosition);
+
+        // limits for top and bottom of actuator
+        int bottomActuatorLimit = 0;  // Replace with your desired bottom limit
+        int topActuatorLimit = 13000;  // Replace with your desired top limit
+
+
+        if (currentGamepad2.right_bumper) {
+            // right bumper pressed, increase motor position
+            motorActuator.setTargetPosition(currentActuatorPosition + 538);
+            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorActuator.setPower(1);
+        }
+        else if (currentGamepad2.left_bumper) {
+            // left bumper pressed, decrease servo position
+            motorActuator.setTargetPosition(currentActuatorPosition - 538);
+            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorActuator.setPower(1);
+        }
+
+
+
+        int currentArmPosition = motorWormGear.getCurrentPosition();
+        telemetry.addData("currentArmPosition", currentArmPosition);
+
+        // limits for top and bottom of worm gear
+        int bottomArmLimit = 0;  // Replace with your desired bottom limit
+        int topArmLimit = 1000;  // Replace with your desired top limit
+
+        if (currentGamepad2.circle) {
+            // circle pressed, increase motor position
+            motorWormGear.setTargetPosition(currentArmPosition + 100);
+            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorWormGear.setPower(.5);
+        }
+        else if (currentGamepad2.square) {
+            // left bumper pressed, decrease servo position
+            motorWormGear.setTargetPosition(currentArmPosition - 100);
+            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorWormGear.setPower(.5);
+        }
+
+
+
+        /*
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            // right bumper pressed, increase motor position
+            motorActuator.setTargetPosition(currentArmPosition + 10);
+        }
+        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            // left bumper pressed, decrease servo position
+            motorActuator.setTargetPosition(currentArmPosition - 10);
+        }
+        /*   CODE FOR WHEN we find out positons
+        while (opModeIsActive()) {
+            // Assuming you have a method to get the current position from the encoder
+            currentPosition = motorActuator.getCurrentPosition();
+
+            if (currentPosition <= bottomLimit) {
+                // Stop the motor and prevent it from moving down further
+                motorActuator.setPower(0);
+            } else if (currentPosition >= topLimit) {
+                // Stop the motor and prevent it from moving up further
+                motorActuator.setPower(0);
+            } else {
+                // No limit reached, continue normal motor control
+                linearMotor.setPower(gamepad1.left_stick_y);
+            }
+            */
+
+
+    }
+
+    // method to do all the math for the gamepad stick
+    public double gamepadSticksMath(double stick) {
+
+
+        // disregards lsy or lsx if their absolute value is less than 0.1
+        if (Math.abs(stick) < 0.1) {
+            stick = 0.0;
+
+        }
+
+        // gets the signs of the stick values
+        double stickSign = stick / Math.abs(stick);
+
+        // ensures the stick value signs aren't NaN
+        if (Double.isNaN(stickSign)) {
+            stickSign = 0;
+        }
+
+        // joystick values used to determine drive movement
+        // they're squared to allow for finer control at low speeds
+        double power = Math.pow(stick, 2) * stickSign;
+
+        // return the calculated value
+        return power;
+    }
     // does the telemetry
     public void doTelem() {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -315,10 +510,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         telemetry.addData("slideLvl", slideLvl);
         telemetry.addData("slideL position", slideL.getCurrentPosition());
         telemetry.addData("slideR position", slideR.getCurrentPosition());
-        telemetry.addData("grabberL Position", grabberL.getPosition());
-        telemetry.addData("grabberR Position", grabberR.getPosition());
 
          */
+
+
         telemetry.addData("motorPowerFactor", motorPowerFactor);
         telemetry.update();
     }
