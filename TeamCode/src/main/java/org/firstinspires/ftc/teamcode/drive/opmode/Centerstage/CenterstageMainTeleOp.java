@@ -37,9 +37,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // how many encoder tics make one full actuator motor rotation
     static final double ARM_TICS_IN_ROT = 537.7;
     // the number of mm the slides move from one motor rotation
-    static final double SLIDE_MM_FROM_ROT = 116;
+    static final double SLIDE_MM_FROM_ROT = 8.3;
     // number of tics to move slide by 1cm
-    static final double SLIDE_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
+    static final double ARM_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
 
     // the slide's level; 0-3, 0 being ground, 3 being highest pole
     int slideLvl = 0;
@@ -188,8 +188,8 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
         motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorWormGear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorActuator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorWormGear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorActuator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
@@ -214,29 +214,15 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             // Store the gamepad values from the previous loop iteration in
             // previousGamepad1 to be used in this loop iteration
             previousGamepad1.copy(currentGamepad1);
-
-            // Store the gamepad values from this loop iteration in
-            // currentGamepad1 to be used for the entirety of this loop iteration
-            currentGamepad1.copy(gamepad1);
-        }
-        catch (Exception e) {
-            // Swallow the possible exception, it should not happen as
-            // currentGamepad1 are being copied from valid Gamepads
-        }
-
-        try {
-            // Store the gamepad values from the previous loop iteration in
-            // previousGamepad2 to be used in this loop iteration
             previousGamepad2.copy(currentGamepad2);
-
-            // Store the gamepad values from this loop iteration in
-            // currentGamepad2 to be used for the entirety of this loop iteration
+            currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
         }
         catch (Exception e) {
             // Swallow the possible exception, it should not happen as
             // currentGamepad1 are being copied from valid Gamepads
         }
+
     }
 
     // calculates/updates motorPowerFactor
@@ -411,13 +397,13 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         int topActuatorLimit = 13000;  // Replace with your desired top limit
 
 
-        if (currentGamepad2.right_bumper) {
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
             // right bumper pressed, increase motor position
             motorActuator.setTargetPosition(currentActuatorPosition + 538);
             motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorActuator.setPower(1);
         }
-        else if (currentGamepad2.left_bumper) {
+        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
             // left bumper pressed, decrease servo position
             motorActuator.setTargetPosition(currentActuatorPosition - 538);
             motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
