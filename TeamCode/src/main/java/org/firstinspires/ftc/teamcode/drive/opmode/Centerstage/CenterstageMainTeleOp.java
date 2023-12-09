@@ -4,12 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 
 @TeleOp(name="CS: 1 Driver TeleOp", group="Linear Opmode")
 //@Disabled
 public class CenterstageMainTeleOp extends LinearOpMode {
+
+    // setup class for grabber and arm movements
+    protected ScoringMechanism mechanism = new ScoringMechanism();
+
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -17,34 +22,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     private DcMotor motorFL = null;
     private DcMotor motorBR = null;
     private DcMotor motorBL = null;
-    private DcMotor motorActuator = null;
-    private DcMotor motorWormGear = null;
-    private Servo servoGrabberL = null;
-    private Servo servoGrabberR = null;
-    private Servo servoRotatorL = null;
-    private Servo servoRotatorR = null;
 
 
     // the power of the motors are multiplied by this
     double motorPowerFactor = 1;
-
-    // variables for servo positions
-    double positionL = 0;
-    double positionR = 0;
-
-
-
-    // how many encoder tics make one full actuator motor rotation
-    static final double ARM_TICS_IN_ROT = 537.7;
-    // the number of mm the slides move from one motor rotation
-    static final double SLIDE_MM_FROM_ROT = 8.3;
-    // number of tics to move slide by 1cm
-    static final double ARM_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
-
-    // the slide's level; 0-3, 0 being ground, 3 being highest pole
-    int slideLvl = 0;
-
-
 
 
     // copies of the gamepad
@@ -70,11 +51,6 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         // resets the runtime
         runtime.reset();
 
-        // enables pwm for the grabber servos
-
-        servoGrabberL.getController().pwmEnable();
-        servoGrabberR.getController().pwmEnable();
-
 
         // runs until the end of the match (driver presses STOP)
         while (opModeIsActive()) { //---------------PRESSES PLAY---------------
@@ -83,12 +59,13 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
             // does the drive motor stuff
             calcMotorPowerFactor();
-            //updateDriveMotors();
+            updateDriveMotors();
 
             // updates the grabber
             updateGrabberServos();
 
             //calibrateServos();
+            //calibrateMotors();
 
 
             // updates the arm motors
@@ -100,53 +77,28 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         }
     }
 
-    // method to find out servo directions and such
     public void calibrateServos() {
 
-        if (currentGamepad1.cross) {
-            positionL = 0;
+        // moves the left servo 0.01 ticks counterclockwise
+        if (currentGamepad1.left_trigger > .4) {
+            mechanism.calibrateServos("leftCounter");
         }
-        else if (currentGamepad1.square) {
-            positionL = 0.5;
+        // moves the left servo 0.01 ticks clockwise
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            mechanism.calibrateServos("leftClock");
         }
-        /*
-        // conditional to trigger lane launcher mechanism
-        else if (currentGamepad1.circle && !previousGamepad1.circle) {
-            positionL = 1;
+        // moves the right servo 0.01 ticks counterclockwise
+        if (currentGamepad2.right_trigger > .4) {
+            mechanism.calibrateServos("rightCounter");
         }
-        else if (currentGamepad1.triangle && !previousGamepad1.triangle) {
-            positionL = 0.9;
-        }
-        */
-
-        servoGrabberL.setPosition(positionL);
-
-
-        if (currentGamepad2.cross && !previousGamepad2.cross) {
-            positionR = 0;
-            servoGrabberR.setPosition(0);
-        }
-        else if (currentGamepad2.square && !previousGamepad2.square) {
-            positionR = 0.1;
-            servoGrabberR.setPosition(0.1);
-        }
-        // conditional to trigger lane launcher mechanism
-        else if (currentGamepad2.circle && !previousGamepad2.circle) {
-            positionR = 1;
-            servoGrabberR.setPosition(1);
-        }
-        else if (currentGamepad2.triangle && !previousGamepad2.triangle) {
-            positionR = 0.9;
-            servoGrabberR.setPosition(0.9);
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            mechanism.calibrateServos("rightClock");
         }
 
-        telemetry.addData("grabberL Position", positionL);
-        //servoGrabberR.setPosition(positionR);
 
     }
 
     public void calibrateMotors() {
-
 
 
     }
@@ -156,25 +108,16 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
     // initialize the motors and servos
     public void initMotorsAndServos() {
+
+        // innitialize arm and servo motors
+        mechanism.init(hardwareMap);
+
         // initialize the motor hardware variables
-                //DRIVE MOTORS
+        //DRIVE MOTORS
         motorFR = hardwareMap.get(DcMotor.class, "FR");
         motorFL = hardwareMap.get(DcMotor.class, "FL");
         motorBL = hardwareMap.get(DcMotor.class, "BL");
         motorBR = hardwareMap.get(DcMotor.class, "BR");
-
-                //ARM MOTORS
-        motorActuator = hardwareMap.get(DcMotor.class, "actuator");
-        motorWormGear = hardwareMap.get(DcMotor.class, "wormy");
-
-                //GRABBER SERVOS
-        servoGrabberL = hardwareMap.get(Servo.class, "grabberL");
-        servoGrabberR = hardwareMap.get(Servo.class, "grabberR");
-        servoRotatorL = hardwareMap.get(Servo.class, "rotatorL");
-        servoRotatorR = hardwareMap.get(Servo.class, "rotatorR");
-
-
-
 
         // reverses some of the motor directions
         motorFL.setDirection(DcMotor.Direction.REVERSE);
@@ -186,26 +129,6 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorWormGear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorActuator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-
-        /* MAY USE THIS FOR ARM MOTORS/SERVOS
-
-        slideL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //initialize the grabber servos variable
-        grabberL = hardwareMap.get(Servo.class, "grabberL");
-        grabberR = hardwareMap.get(Servo.class, "grabberR");
-
-         */
     }
 
     // makes copies of the gamepad
@@ -217,8 +140,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Swallow the possible exception, it should not happen as
             // currentGamepad1 are being copied from valid Gamepads
         }
@@ -274,37 +196,21 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // updates the grabber position if in regular servo mode
     public void updateGrabberServos() {
 
-
-        // Rising edge detector for right bumper.
-        // This moves to the closed position.
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-            servoGrabberL.setPosition(0.16); // smaller = closed
-            servoGrabberR.setPosition(0.93); // larger = closed
+        // opens the left grabber with trigger, closes with more precise bumper button
+        if (currentGamepad2.left_trigger > .4) {
+            mechanism.openLeftClaw();
+        }
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            mechanism.closeLeftClaw();
         }
 
-        // Rising edge detector for left bumper.
-        // This moves to the open position.
-        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-            servoGrabberL.setPosition(0.29); // smaller = closed
-            servoGrabberR.setPosition(0.79); // larger = closed
+        // opens the right grabber with trigger, closes with more precise bumper button
+        if (currentGamepad2.right_trigger > .4) {
+            mechanism.openRightClaw();
         }
-
-
-
-        // Code used to calibrate the servo positions for open and closed
-        /*
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-            // right bumper pressed, increase servo position
-            servoGrabberL.setPosition(servoGrabberL.getPosition() + 0.01);
-            servoGrabberR.setPosition(servoGrabberR.getPosition() + 0.01);
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            mechanism.closeRightClaw();
         }
-        else if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-            // left bumper pressed, decrease servo position
-            servoGrabberL.setPosition(servoGrabberL.getPosition() - 0.01);
-            servoGrabberR.setPosition(servoGrabberR.getPosition() - 0.01);
-        }
-
-         */
 
     }
 
@@ -386,80 +292,24 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
      */
 
-    // updates the actuator and the worm gear to move the arm out and around
     public void updateArmMotors() {
 
-        int currentActuatorPosition = motorActuator.getCurrentPosition();
-        telemetry.addData("currentActuatorPosition", currentActuatorPosition);
-
-        // limits for top and bottom of actuator
-        int bottomActuatorLimit = 0;  // Replace with your desired bottom limit
-        int topActuatorLimit = 13000;  // Replace with your desired top limit
-
-
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+        if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
             // right bumper pressed, increase motor position
-            motorActuator.setTargetPosition(currentActuatorPosition + 538);
-            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorActuator.setPower(1);
+            mechanism.extendActuator();
         }
-        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+        if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
             // left bumper pressed, decrease servo position
-            motorActuator.setTargetPosition(currentActuatorPosition - 538);
-            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorActuator.setPower(1);
+            mechanism.retractActuator();
         }
-
-
-
-        int currentArmPosition = motorWormGear.getCurrentPosition();
-        telemetry.addData("currentArmPosition", currentArmPosition);
-
-        // limits for top and bottom of worm gear
-        int bottomArmLimit = 0;  // Replace with your desired bottom limit
-        int topArmLimit = 1000;  // Replace with your desired top limit
-
         if (currentGamepad2.circle) {
             // circle pressed, increase motor position
-            motorWormGear.setTargetPosition(currentArmPosition + 100);
-            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorWormGear.setPower(.5);
+            mechanism.moveArmBack();
         }
-        else if (currentGamepad2.square) {
+        if (currentGamepad2.square) {
             // left bumper pressed, decrease servo position
-            motorWormGear.setTargetPosition(currentArmPosition - 100);
-            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorWormGear.setPower(.5);
+            mechanism.moveArmForward();
         }
-
-
-
-        /*
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            // right bumper pressed, increase motor position
-            motorActuator.setTargetPosition(currentArmPosition + 10);
-        }
-        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            // left bumper pressed, decrease servo position
-            motorActuator.setTargetPosition(currentArmPosition - 10);
-        }
-        /*   CODE FOR WHEN we find out positons
-        while (opModeIsActive()) {
-            // Assuming you have a method to get the current position from the encoder
-            currentPosition = motorActuator.getCurrentPosition();
-
-            if (currentPosition <= bottomLimit) {
-                // Stop the motor and prevent it from moving down further
-                motorActuator.setPower(0);
-            } else if (currentPosition >= topLimit) {
-                // Stop the motor and prevent it from moving up further
-                motorActuator.setPower(0);
-            } else {
-                // No limit reached, continue normal motor control
-                linearMotor.setPower(gamepad1.left_stick_y);
-            }
-            */
-
 
     }
 
