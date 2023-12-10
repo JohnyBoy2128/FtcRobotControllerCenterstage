@@ -198,18 +198,18 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
         // opens the left grabber with trigger, closes with more precise bumper button
         if (currentGamepad2.left_trigger > .4) {
-            mechanism.openLeftClaw();
+            mechanism.closeLeftClaw();
         }
         if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            mechanism.closeLeftClaw();
+            mechanism.openLeftClaw();
         }
 
         // opens the right grabber with trigger, closes with more precise bumper button
         if (currentGamepad2.right_trigger > .4) {
-            mechanism.openRightClaw();
+            mechanism.closeRightClaw();
         }
         if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            mechanism.closeRightClaw();
+            mechanism.openRightClaw();
         }
 
     }
