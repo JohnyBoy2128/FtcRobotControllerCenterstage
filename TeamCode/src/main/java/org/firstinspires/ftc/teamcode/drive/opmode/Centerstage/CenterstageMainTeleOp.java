@@ -37,9 +37,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // how many encoder tics make one full actuator motor rotation
     static final double ARM_TICS_IN_ROT = 537.7;
     // the number of mm the slides move from one motor rotation
-    static final double SLIDE_MM_FROM_ROT = 8.3;
+    static final double ARM_MM_FROM_ROT = 8.3;
     // number of tics to move slide by 1cm
-    static final double ARM_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
+    static final double ARM_TICS_IN_CM = ARM_TICS_IN_ROT / (ARM_MM_FROM_ROT / 10);
 
     // the slide's level; 0-3, 0 being ground, 3 being highest pole
     int slideLvl = 0;
@@ -86,9 +86,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             //updateDriveMotors();
 
             // updates the grabber
-            updateGrabberServos();
+            //updateGrabberServos();
 
-            //calibrateServos();
+            calibrateServos();
 
 
             // updates the arm motors
@@ -103,45 +103,25 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // method to find out servo directions and such
     public void calibrateServos() {
 
-        if (currentGamepad1.cross) {
-            positionL = 0;
-        }
-        else if (currentGamepad1.square) {
-            positionL = 0.5;
-        }
-        /*
-        // conditional to trigger lane launcher mechanism
-        else if (currentGamepad1.circle && !previousGamepad1.circle) {
-            positionL = 1;
-        }
-        else if (currentGamepad1.triangle && !previousGamepad1.triangle) {
-            positionL = 0.9;
-        }
-        */
-
-        servoGrabberL.setPosition(positionL);
+        //      CALIBRATION METHOD
+        // method to find out servo directions and such
 
 
-        if (currentGamepad2.cross && !previousGamepad2.cross) {
-            positionR = 0;
-            servoGrabberR.setPosition(0);
+        if (gamepad1.triangle && !previousGamepad1.triangle) {
+            servoRotatorL.setPosition(servoRotatorL.getPosition() - 0.01);      // Clockwise
         }
-        else if (currentGamepad2.square && !previousGamepad2.square) {
-            positionR = 0.1;
-            servoGrabberR.setPosition(0.1);
+        if (gamepad1.cross && !previousGamepad1.cross) {
+            servoRotatorL.setPosition(servoRotatorL.getPosition() + 0.01);      // Counterclockwise
         }
-        // conditional to trigger lane launcher mechanism
-        else if (currentGamepad2.circle && !previousGamepad2.circle) {
-            positionR = 1;
-            servoGrabberR.setPosition(1);
+        if (gamepad1.left_bumper && !previousGamepad1.left_bumper) {
+            servoRotatorR.setPosition(servoRotatorR.getPosition() + 0.01);      // Counterclockwise
         }
-        else if (currentGamepad2.triangle && !previousGamepad2.triangle) {
-            positionR = 0.9;
-            servoGrabberR.setPosition(0.9);
+        if (gamepad1.right_bumper && !previousGamepad1.right_bumper) {
+            servoRotatorR.setPosition(servoRotatorR.getPosition() - 0.01);      // Clockwise
         }
 
-        telemetry.addData("grabberL Position", positionL);
-        //servoGrabberR.setPosition(positionR);
+        // string containing each servos position
+         telemetry.addData("rotatorPosition", "L: " + Double.toString(servoRotatorL.getPosition()) + ",  R: " + Double.toString(servoRotatorR.getPosition()));
 
     }
 
@@ -390,47 +370,58 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void updateArmMotors() {
 
         int currentActuatorPosition = motorActuator.getCurrentPosition();
-        telemetry.addData("currentActuatorPosition", currentActuatorPosition);
 
         // limits for top and bottom of actuator
         int bottomActuatorLimit = 0;  // Replace with your desired bottom limit
         int topActuatorLimit = 13000;  // Replace with your desired top limit
 
-
         if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            // right bumper pressed, increase motor position
-            motorActuator.setTargetPosition(currentActuatorPosition + 538);
-            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorActuator.setPower(1);
+            if (currentActuatorPosition < topActuatorLimit - ARM_TICS_IN_ROT) {
+                // right bumper pressed, increase motor position
+                motorActuator.setTargetPosition(currentActuatorPosition + 538);
+                motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorActuator.setPower(1);
+            }
         }
-        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            // left bumper pressed, decrease servo position
-            motorActuator.setTargetPosition(currentActuatorPosition - 538);
-            motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorActuator.setPower(1);
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            if (currentActuatorPosition > bottomActuatorLimit + ARM_TICS_IN_ROT) {
+                // left bumper pressed, decrease servo position
+                motorActuator.setTargetPosition(currentActuatorPosition - 538);
+                motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorActuator.setPower(1);
+            }
         }
+
+        telemetry.addData("currentActuatorPosition", currentActuatorPosition);
+
 
 
 
         int currentArmPosition = motorWormGear.getCurrentPosition();
-        telemetry.addData("currentArmPosition", currentArmPosition);
 
         // limits for top and bottom of worm gear
         int bottomArmLimit = 0;  // Replace with your desired bottom limit
         int topArmLimit = 1000;  // Replace with your desired top limit
 
-        if (currentGamepad2.circle) {
-            // circle pressed, increase motor position
-            motorWormGear.setTargetPosition(currentArmPosition + 100);
-            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorWormGear.setPower(.5);
+        if (currentGamepad2.circle && !previousGamepad2.circle) {
+            if (currentArmPosition < topArmLimit - 99) {
+                // circle pressed, increase motor position
+                motorWormGear.setTargetPosition(currentArmPosition + 100);
+                motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorWormGear.setPower(.5);
+            }
         }
-        else if (currentGamepad2.square) {
-            // left bumper pressed, decrease servo position
-            motorWormGear.setTargetPosition(currentArmPosition - 100);
-            motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorWormGear.setPower(.5);
+        if (currentGamepad2.square && !previousGamepad2.square) {
+            if (currentArmPosition > bottomArmLimit + 99) {
+                // left bumper pressed, decrease servo position
+                motorWormGear.setTargetPosition(currentArmPosition - 100);
+                motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorWormGear.setPower(.5);
+            }
         }
+
+        telemetry.addData("currentArmPosition", currentArmPosition);
+
 
 
 
