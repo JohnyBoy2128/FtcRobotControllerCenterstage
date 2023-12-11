@@ -64,46 +64,18 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             // updates the grabber
             updateGrabberServos();
 
-            //calibrateServos();
-            //calibrateMotors();
-
-
             // updates the arm motors
             updateArmMotors();
 
             // do telemetry
             doTelem();
 
+            // extra methods for calibration
+            //calibrateServos();
+            //calibrateMotors();
+
         }
     }
-
-    public void calibrateServos() {
-
-        // moves the left servo 0.01 ticks counterclockwise
-        if (currentGamepad1.left_trigger > .4) {
-            mechanism.calibrateServos("leftCounter");
-        }
-        // moves the left servo 0.01 ticks clockwise
-        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            mechanism.calibrateServos("leftClock");
-        }
-        // moves the right servo 0.01 ticks counterclockwise
-        if (currentGamepad2.right_trigger > .4) {
-            mechanism.calibrateServos("rightCounter");
-        }
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            mechanism.calibrateServos("rightClock");
-        }
-
-
-    }
-
-    public void calibrateMotors() {
-
-
-    }
-
-    //CODE BELOW IS FINAL
 
 
     // initialize the motors and servos
@@ -214,101 +186,19 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
     }
 
-    /*
-    // updates the grabber position if in continuous rotation mode
-    public void updateGrabberContinuousMode() {
-        if (currentGamepad1.right_bumper && !currentGamepad1.left_bumper) {
-            // makes the wheels spin inward
-            grabberL.setPosition(-10);
-            grabberR.setPosition(10);
-
-            // starts the wheels moving
-            grabberL.getController().pwmEnable();
-            grabberR.getController().pwmEnable();
-        } else if (currentGamepad1.left_bumper && !currentGamepad1.right_bumper) {
-            // makes the wheels spin outward
-            grabberL.setPosition(10);
-            grabberR.setPosition(-10);
-
-            // starts the wheels moving
-            grabberL.getController().pwmEnable();
-            grabberR.getController().pwmEnable();
-        } else {
-            // stops the wheels from turning
-            grabberL.getController().pwmDisable();
-            grabberR.getController().pwmDisable();
-        }
-    }
-
-    // move the slides a number of cm
-    public void moveSlidesToLvl(int newSlideLvl) {
-        int newHeight = 0;
-
-        if (newSlideLvl == 1) {
-            newHeight = (int)(36 * SLIDE_TICS_IN_CM);
-        } else if (newSlideLvl == 2) {
-            newHeight = (int)(62 * SLIDE_TICS_IN_CM);
-        } else if (newSlideLvl == 3) {
-            newHeight = (int)(87 * SLIDE_TICS_IN_CM);
-        } else if (newSlideLvl == 4) {
-            newHeight = (int)(3.25 * SLIDE_TICS_IN_CM);
-        }
-
-        // moves the slides to the desired position
-        slideL.setTargetPosition(newHeight);
-        slideR.setTargetPosition(newHeight);
-        slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (newSlideLvl < slideLvl) {
-            // if the slides are moving downward...
-            slideL.setPower(0.7);
-            slideR.setPower(0.7);
-        } else {
-            // if the slides are moving upward or are the same level...
-            slideL.setPower(1);
-            slideR.setPower(1);
-        }
-
-        // set the slideLvl to be what the slides have just moved to
-        slideLvl = newSlideLvl;
-    }
-
-    // updates the slides level
-    public void updateSlidesLvl() {
-        // decides power of the slides
-        if (currentGamepad1.a && !previousGamepad1.a) {
-            moveSlidesToLvl(0);
-        } else if (currentGamepad1.b && !previousGamepad1.b) {
-            moveSlidesToLvl(1);
-        } else if (currentGamepad1.y && !previousGamepad1.y) {
-            moveSlidesToLvl(2);
-        } else if (currentGamepad1.x && !previousGamepad1.x) {
-            moveSlidesToLvl(3);
-        } else if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
-            moveSlidesToLvl(4);
-        }
-    }
-
-     */
-
     public void updateArmMotors() {
 
-        if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
-            // right bumper pressed, increase motor position
-            mechanism.extendActuator();
+        if (gamepad2.cross && !previousGamepad2.cross) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR);
         }
-        if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
-            // left bumper pressed, decrease servo position
-            mechanism.retractActuator();
+        if (gamepad2.square && !previousGamepad2.square) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1);
         }
-        if (currentGamepad2.circle) {
-            // circle pressed, increase motor position
-            mechanism.moveArmBack();
+        if (gamepad2.circle && !previousGamepad2.circle) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL2AND3);
         }
-        if (currentGamepad2.square) {
-            // left bumper pressed, decrease servo position
-            mechanism.moveArmForward();
+        if (gamepad2.triangle && !previousGamepad2.triangle) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL4AND5);
         }
 
     }
@@ -341,16 +231,51 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // does the telemetry
     public void doTelem() {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        /*
-
-        telemetry.addData("slideLvl", slideLvl);
-        telemetry.addData("slideL position", slideL.getCurrentPosition());
-        telemetry.addData("slideR position", slideR.getCurrentPosition());
-
-         */
-
-
-        telemetry.addData("motorPowerFactor", motorPowerFactor);
+        telemetry.addData("SPEED!!!", motorPowerFactor * 100);
         telemetry.update();
     }
+
+    public void calibrateServos() {
+
+        // moves the left servo 0.01 ticks counterclockwise
+        if (currentGamepad1.left_trigger > .4) {
+            mechanism.calibrateServos("leftCounter");
+        }
+        // moves the left servo 0.01 ticks clockwise
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            mechanism.calibrateServos("leftClock");
+        }
+        // moves the right servo 0.01 ticks counterclockwise
+        if (currentGamepad2.right_trigger > .4) {
+            mechanism.calibrateServos("rightCounter");
+        }
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            mechanism.calibrateServos("rightClock");
+        }
+
+
+    }
+
+    public void calibrateMotors() {
+
+        // moves actuator motors by 1 rotation, and arm motors by 100 ticks
+        if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
+            // right bumper pressed, increase motor position
+            mechanism.extendActuator();
+        }
+        if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
+            // left bumper pressed, decrease servo position
+            mechanism.retractActuator();
+        }
+        if (currentGamepad2.circle) {
+            // circle pressed, increase motor position
+            mechanism.moveArmBack();
+        }
+        if (currentGamepad2.square) {
+            // left bumper pressed, decrease servo position
+            mechanism.moveArmForward();
+        }
+
+    }
+
 }

@@ -117,36 +117,66 @@ public class ScoringMechanism {
     }
 
 
+    public void moveToLevel(boardLevels level) {
+        // variables for each arm parts positions
+        int armHeight = 0;
+        int actuatorLength = 0;
+        double rotatorLPosition = 0.0;
+        double rotatorRPosition = 0.0;
 
-    // updates the actuator and the worm gear to move the arm out and around
-
-
-
-
-        /*
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            // right bumper pressed, increase motor position
-            motorActuator.setTargetPosition(currentArmPosition + 10);
+        // switch with each of the positions on the board for dropping the pixels
+        switch (level) {
+            case FLOOR:
+                rotatorLPosition = 0.78;
+                rotatorRPosition = 0.24;
+                break;
+            case LEVEL1:
+                armHeight = -978;
+                actuatorLength = 2257;
+                rotatorLPosition = 0.62;
+                rotatorRPosition = 0.40;
+                break;
+            case LEVEL2AND3:
+                armHeight = -1574;
+                actuatorLength = 9515;
+                rotatorLPosition = 0.67;
+                rotatorRPosition = 0.36;
+                break;
+            case LEVEL4AND5:
+                armHeight = -1781;
+                actuatorLength = 12153;
+                rotatorLPosition = 0.69;
+                rotatorRPosition = 0.34;
+                break;
         }
-        else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            // left bumper pressed, decrease servo position
-            motorActuator.setTargetPosition(currentArmPosition - 10);
-        }
-        /*   CODE FOR WHEN we find out positons
-        while (opModeIsActive()) {
-            // Assuming you have a method to get the current position from the encoder
-            currentPosition = motorActuator.getCurrentPosition();
 
-            if (currentPosition <= bottomLimit) {
-                // Stop the motor and prevent it from moving down further
-                motorActuator.setPower(0);
-            } else if (currentPosition >= topLimit) {
-                // Stop the motor and prevent it from moving up further
-                motorActuator.setPower(0);
-            } else {
-                // No limit reached, continue normal motor control
-                linearMotor.setPower(gamepad1.left_stick_y);
-            }
-            */
+        //setting the motor positions and powers for each level
+        motorActuator.setTargetPosition(actuatorLength);
+        motorActuator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorActuator.setPower(1);
+
+        motorWormGear.setTargetPosition(armHeight);
+        motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorWormGear.setPower(1);
+
+        //setting the servo rotator positions
+        servoRotatorL.setPosition(rotatorLPosition);
+        servoRotatorR.setPosition(rotatorRPosition);
+
+
     }
+
+    public enum boardLevels {
+        FLOOR,
+        LEVEL1,
+        LEVEL2AND3,
+        LEVEL4AND5,
+        STACK5,
+        STACK4,
+        STACK3,
+        STACK2
+    }
+
+
+}
 
