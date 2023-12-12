@@ -13,6 +13,8 @@ public class ScoringMechanism {
     private Servo servoGrabberR = null;
     private Servo servoRotatorL = null;
     private Servo servoRotatorR = null;
+    private Servo servoHookL = null;
+    private Servo servoHookR = null;
 
 
     // how many encoder tics make one full actuator motor rotation
@@ -38,6 +40,9 @@ public class ScoringMechanism {
         servoGrabberR = hwmap.get(Servo.class, "grabberR");
         servoRotatorL = hwmap.get(Servo.class, "rotatorL");
         servoRotatorR = hwmap.get(Servo.class, "rotatorR");
+        servoHookL = hwmap.get(Servo.class, "hookL");
+        servoHookR = hwmap.get(Servo.class, "hookR");
+
 
         // setup encoders on arm and worm gear motors
         motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,8 +51,8 @@ public class ScoringMechanism {
         motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // enables pwm for the grabber servos
-        servoGrabberL.getController().pwmEnable();
-        servoGrabberR.getController().pwmEnable();
+        //servoGrabberL.getController().pwmEnable();
+        //servoGrabberR.getController().pwmEnable();
 
     }
 
@@ -58,7 +63,7 @@ public class ScoringMechanism {
         servoGrabberL.setPosition(0.16);
     }
     public void closeRightClaw() {
-        servoGrabberR.setPosition(0.93);
+        servoGrabberR.setPosition(0.92);
     }
     public void openLeftClaw() {
         servoGrabberL.setPosition(0.29);
@@ -74,16 +79,16 @@ public class ScoringMechanism {
         // take different states passed to the method and move each
         // servo clockwise and counterclockwise
         if (state.equals("leftCounter")) {
-            servoRotatorL.setPosition(servoRotatorL.getPosition() + 0.01);      // Counterclockwise
+            servoHookL.setPosition(servoHookL.getPosition() + 0.01);      // Counterclockwise
         }
         if (state.equals("leftClock")) {
-            servoRotatorL.setPosition(servoRotatorL.getPosition() - 0.01);      // Clockwise
+            servoHookL.setPosition(servoHookL.getPosition() - 0.01);      // Clockwise
         }
         if (state.equals("rightCounter")) {
-            servoRotatorR.setPosition(servoRotatorR.getPosition() + 0.01);      // Counterclockwise
+            servoHookR.setPosition(servoHookR.getPosition() + 0.01);      // Counterclockwise
         }
         if (state.equals("rightClock")) {
-            servoRotatorR.setPosition(servoRotatorR.getPosition() - 0.01);      // Clockwise
+            servoHookR.setPosition(servoHookR.getPosition() - 0.01);      // Clockwise
         }
 
         // string containing each servos position
@@ -116,6 +121,11 @@ public class ScoringMechanism {
         motorWormGear.setPower(1);
     }
 
+    public void moveHooks() {
+
+
+    }
+
 
     public void moveToLevel(boardLevels level) {
         // variables for each arm parts positions
@@ -127,6 +137,8 @@ public class ScoringMechanism {
         // switch with each of the positions on the board for dropping the pixels
         switch (level) {
             case FLOOR:
+                actuatorLength = 0;
+                armHeight = 0;
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
                 break;

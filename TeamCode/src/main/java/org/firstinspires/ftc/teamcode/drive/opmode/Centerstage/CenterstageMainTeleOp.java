@@ -242,14 +242,14 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             mechanism.calibrateServos("leftCounter");
         }
         // moves the left servo 0.01 ticks clockwise
-        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
             mechanism.calibrateServos("leftClock");
         }
         // moves the right servo 0.01 ticks counterclockwise
-        if (currentGamepad2.right_trigger > .4) {
+        if (currentGamepad1.right_trigger > .4) {
             mechanism.calibrateServos("rightCounter");
         }
-        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
             mechanism.calibrateServos("rightClock");
         }
 
