@@ -71,8 +71,8 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             doTelem();
 
             // extra methods for calibration
-            //calibrateServos();
-            //calibrateMotors();
+            calibrateServos();
+            calibrateMotors();
 
         }
     }
@@ -188,16 +188,19 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
     public void updateArmMotors() {
 
-        if (gamepad2.cross && !previousGamepad2.cross) {
+        if (currentGamepad2.cross && !previousGamepad2.cross) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR);
         }
-        if (gamepad2.square && !previousGamepad2.square) {
+        if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button){
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP);
+        }
+        if (currentGamepad2.square && !previousGamepad2.square) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1);
         }
-        if (gamepad2.circle && !previousGamepad2.circle) {
+        if (currentGamepad2.circle && !previousGamepad2.circle) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL2AND3);
         }
-        if (gamepad2.triangle && !previousGamepad2.triangle) {
+        if (currentGamepad2.triangle && !previousGamepad2.triangle) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL4AND5);
         }
 
@@ -237,41 +240,43 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
     public void calibrateServos() {
 
+        String telem = new String("");
         // moves the left servo 0.01 ticks counterclockwise
         if (currentGamepad1.left_trigger > .4) {
-            mechanism.calibrateServos("leftCounter");
+            telem = mechanism.calibrateServos("leftCounter");
         }
         // moves the left servo 0.01 ticks clockwise
-        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-            mechanism.calibrateServos("leftClock");
+        if (currentGamepad1.left_bumper) {
+            telem = mechanism.calibrateServos("leftClock");
         }
         // moves the right servo 0.01 ticks counterclockwise
         if (currentGamepad1.right_trigger > .4) {
-            mechanism.calibrateServos("rightCounter");
+            telem = mechanism.calibrateServos("rightCounter");
         }
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-            mechanism.calibrateServos("rightClock");
+        if (currentGamepad1.right_bumper) {
+            telem = mechanism.calibrateServos("rightClock");
         }
 
+        telemetry.addData("Servo - ", mechanism.getHookServoPosition());
 
     }
 
     public void calibrateMotors() {
 
         // moves actuator motors by 1 rotation, and arm motors by 100 ticks
-        if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
+        if (currentGamepad2.dpad_up) {
             // right bumper pressed, increase motor position
             mechanism.extendActuator();
         }
-        if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
+        if (currentGamepad2.dpad_down) {
             // left bumper pressed, decrease servo position
             mechanism.retractActuator();
         }
-        if (currentGamepad2.circle) {
+        if (currentGamepad2.dpad_left) {
             // circle pressed, increase motor position
             mechanism.moveArmBack();
         }
-        if (currentGamepad2.square) {
+        if (currentGamepad2.dpad_right) {
             // left bumper pressed, decrease servo position
             mechanism.moveArmForward();
         }

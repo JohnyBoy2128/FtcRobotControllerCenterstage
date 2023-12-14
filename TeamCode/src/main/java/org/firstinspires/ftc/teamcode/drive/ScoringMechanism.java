@@ -56,6 +56,11 @@ public class ScoringMechanism {
 
     }
 
+    //methods for retrieving postiton information
+    public String getHookServoPosition() {
+        return "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition());
+    }
+
     // methods for opening and closing each servo
     // smaller numbers on the left servo are closed, while
     // smaller numbers on the right servo are open
@@ -142,6 +147,11 @@ public class ScoringMechanism {
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
                 break;
+            case PICKUP:
+                actuatorLength = 0;
+                armHeight = -200;
+                rotatorLPosition = 0.62;
+                rotatorRPosition = 0.40;
             case LEVEL1:
                 armHeight = -978;
                 actuatorLength = 2257;
@@ -159,6 +169,8 @@ public class ScoringMechanism {
                 actuatorLength = 12153;
                 rotatorLPosition = 0.69;
                 rotatorRPosition = 0.34;
+                break;
+            case HANG:
                 break;
         }
 
@@ -180,9 +192,11 @@ public class ScoringMechanism {
 
     public enum boardLevels {
         FLOOR,
+        PICKUP,
         LEVEL1,
         LEVEL2AND3,
         LEVEL4AND5,
+        HANG,
         STACK5,
         STACK4,
         STACK3,
