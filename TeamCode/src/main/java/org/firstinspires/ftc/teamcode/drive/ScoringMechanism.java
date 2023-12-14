@@ -138,6 +138,8 @@ public class ScoringMechanism {
         int actuatorLength = 0;
         double rotatorLPosition = 0.0;
         double rotatorRPosition = 0.0;
+        double hookLPosition = 88;
+        double hookRPosition = 25;
 
         // switch with each of the positions on the board for dropping the pixels
         switch (level) {
@@ -147,11 +149,16 @@ public class ScoringMechanism {
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
                 break;
+            /*
             case PICKUP:
                 actuatorLength = 0;
                 armHeight = -200;
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
+                hookLPosition = 90;
+                hookRPosition = 25;
+
+             */
             case LEVEL1:
                 armHeight = -978;
                 actuatorLength = 2257;
@@ -171,6 +178,10 @@ public class ScoringMechanism {
                 rotatorRPosition = 0.34;
                 break;
             case HANG:
+                armHeight = -3817;
+                actuatorLength = 12153;
+                rotatorLPosition = 0.84;
+                rotatorRPosition = 0.16;
                 break;
         }
 
@@ -186,6 +197,10 @@ public class ScoringMechanism {
         //setting the servo rotator positions
         servoRotatorL.setPosition(rotatorLPosition);
         servoRotatorR.setPosition(rotatorRPosition);
+
+        //setting hook positions
+        servoHookL.setPosition(hookLPosition);
+        servoHookR.setPosition(hookRPosition);
 
 
     }

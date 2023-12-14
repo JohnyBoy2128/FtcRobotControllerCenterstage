@@ -71,7 +71,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             doTelem();
 
             // extra methods for calibration
-            calibrateServos();
+            //calibrateServos();
             calibrateMotors();
 
         }
@@ -191,9 +191,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.cross && !previousGamepad2.cross) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR);
         }
-        if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button){
-            mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP);
-        }
+        //if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button){
+        //    mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP);
+        //}
         if (currentGamepad2.square && !previousGamepad2.square) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1);
         }
@@ -202,6 +202,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         }
         if (currentGamepad2.triangle && !previousGamepad2.triangle) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL4AND5);
+        }
+        if (currentGamepad2.guide && !previousGamepad2.guide) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.HANG);
         }
 
     }
