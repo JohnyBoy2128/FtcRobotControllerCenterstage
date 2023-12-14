@@ -23,6 +23,8 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     private Servo servoGrabberR = null;
     private Servo servoRotatorL = null;
     private Servo servoRotatorR = null;
+    private Servo servoHookL = null;
+    private Servo servoHookR = null;
 
 
     // the power of the motors are multiplied by this
@@ -152,8 +154,8 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         servoGrabberR = hardwareMap.get(Servo.class, "grabberR");
         servoRotatorL = hardwareMap.get(Servo.class, "rotatorL");
         servoRotatorR = hardwareMap.get(Servo.class, "rotatorR");
-
-
+        servoHookL = hardwareMap.get(Servo.class, "hookL");
+        servoHookR = hardwareMap.get(Servo.class, "hookR");
 
 
         // reverses some of the motor directions
@@ -255,6 +257,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void updateGrabberServos() {
 
 
+        /*
         // Rising edge detector for right bumper.
         // This moves to the closed position.
         if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
@@ -269,22 +272,27 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             servoGrabberR.setPosition(0.79); // larger = closed
         }
 
+         */
 
 
         // Code used to calibrate the servo positions for open and closed
-        /*
+
         if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
             // right bumper pressed, increase servo position
-            servoGrabberL.setPosition(servoGrabberL.getPosition() + 0.01);
-            servoGrabberR.setPosition(servoGrabberR.getPosition() + 0.01);
+            servoHookL.setPosition(servoHookL.getPosition() + 0.01);
         }
-        else if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
+        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
             // left bumper pressed, decrease servo position
-            servoGrabberL.setPosition(servoGrabberL.getPosition() - 0.01);
-            servoGrabberR.setPosition(servoGrabberR.getPosition() - 0.01);
+            servoHookL.setPosition(servoHookL.getPosition() - 0.01);
+        }
+        if (currentGamepad1.triangle && !previousGamepad1.triangle) {
+            servoHookR.setPosition(servoHookR.getPosition() + 0.01);
+        }
+        if (currentGamepad1.cross && !previousGamepad1.cross) {
+            servoHookR.setPosition(servoHookR.getPosition() - 0.01);
         }
 
-         */
+
 
     }
 
