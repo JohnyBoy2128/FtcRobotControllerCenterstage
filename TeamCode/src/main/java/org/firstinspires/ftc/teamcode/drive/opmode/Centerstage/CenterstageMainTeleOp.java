@@ -84,17 +84,17 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             copyGamepad();
 
             // does the drive motor stuff
-            calcMotorPowerFactor();
+            //calcMotorPowerFactor();
             //updateDriveMotors();
 
             // updates the grabber
-            //updateGrabberServos();
+            updateGrabberServos();
 
             calibrateServos();
 
 
             // updates the arm motors
-            updateArmMotors();
+            //updateArmMotors();
 
             // do telemetry
             doTelem();
@@ -256,42 +256,24 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // updates the grabber position if in regular servo mode
     public void updateGrabberServos() {
 
-
-        /*
-        // Rising edge detector for right bumper.
-        // This moves to the closed position.
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-            servoGrabberL.setPosition(0.16); // smaller = closed
-            servoGrabberR.setPosition(0.93); // larger = closed
-        }
-
-        // Rising edge detector for left bumper.
-        // This moves to the open position.
-        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
-            servoGrabberL.setPosition(0.29); // smaller = closed
-            servoGrabberR.setPosition(0.79); // larger = closed
-        }
-
-         */
-
-
         // Code used to calibrate the servo positions for open and closed
 
-        if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
+        if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
             // right bumper pressed, increase servo position
             servoHookL.setPosition(servoHookL.getPosition() + 0.01);
         }
-        if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
+        if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
             // left bumper pressed, decrease servo position
             servoHookL.setPosition(servoHookL.getPosition() - 0.01);
         }
-        if (currentGamepad1.triangle && !previousGamepad1.triangle) {
+        if (currentGamepad2.triangle && !previousGamepad2.triangle) {
             servoHookR.setPosition(servoHookR.getPosition() + 0.01);
         }
-        if (currentGamepad1.cross && !previousGamepad1.cross) {
+        if (currentGamepad2.cross && !previousGamepad2.cross) {
             servoHookR.setPosition(servoHookR.getPosition() - 0.01);
         }
 
+        telemetry.addData("hookPosition", "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition()));
 
 
     }
@@ -409,10 +391,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
 
         // limits for top and bottom of worm gear
         int bottomArmLimit = 0;  // Replace with your desired bottom limit
-        int topArmLimit = 1000;  // Replace with your desired top limit
+        int topArmLimit = -3000;  // Replace with your desired top limit
 
         if (currentGamepad2.circle && !previousGamepad2.circle) {
-            if (currentArmPosition < topArmLimit - 99) {
+            if (currentArmPosition > topArmLimit + 99) {
                 // circle pressed, increase motor position
                 motorWormGear.setTargetPosition(currentArmPosition + 100);
                 motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -420,7 +402,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             }
         }
         if (currentGamepad2.square && !previousGamepad2.square) {
-            if (currentArmPosition > bottomArmLimit + 99) {
+            if (currentArmPosition < bottomArmLimit - 99) {
                 // left bumper pressed, decrease servo position
                 motorWormGear.setTargetPosition(currentArmPosition - 100);
                 motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
