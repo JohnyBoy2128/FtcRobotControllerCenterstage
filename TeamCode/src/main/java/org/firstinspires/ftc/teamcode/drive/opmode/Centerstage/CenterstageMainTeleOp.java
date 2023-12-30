@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 
+
 @TeleOp(name="CS: 1 Driver TeleOp", group="Linear Opmode")
 //@Disabled
 public class CenterstageMainTeleOp extends LinearOpMode {
@@ -38,6 +39,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void runOpMode() { //---------------PRESSES INITIALIZE---------------
         // initialize the motors and servos
         initMotorsAndServos();
+
+        // closes servos on grabber to hold pixels before running
+        mechanism.closeLeftClaw();
+        mechanism.closeRightClaw();
 
         // adds telemetry that the robot has been initialized
         telemetry.addData("Status", "Initialized");
@@ -71,7 +76,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             doTelem();
 
             // extra methods for calibration
-            //calibrateServos();
+            calibrateServos();
+
+            ////////            ENABLE FOR SCRIMMAGEEEEEEE                 ///////////
             calibrateMotors();
 
         }
@@ -191,9 +198,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.cross && !previousGamepad2.cross) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR);
         }
-        //if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button){
-        //    mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP);
-        //}
+        if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button){
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP);
+        }
         if (currentGamepad2.square && !previousGamepad2.square) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1);
         }
@@ -242,16 +249,17 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     }
 
     public void calibrateServos() {
-
         String telem = new String("");
+
         // moves the left servo 0.01 ticks counterclockwise
-        if (currentGamepad1.left_trigger > .4) {
+        if (currentGamepad1.left_bumper) {
             telem = mechanism.calibrateServos("leftCounter");
         }
         // moves the left servo 0.01 ticks clockwise
-        if (currentGamepad1.left_bumper) {
+        if (currentGamepad1.right_bumper) {
             telem = mechanism.calibrateServos("leftClock");
         }
+        /*
         // moves the right servo 0.01 ticks counterclockwise
         if (currentGamepad1.right_trigger > .4) {
             telem = mechanism.calibrateServos("rightCounter");
@@ -259,6 +267,8 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad1.right_bumper) {
             telem = mechanism.calibrateServos("rightClock");
         }
+
+         */
 
         telemetry.addData("Servo - ", mechanism.getHookServoPosition());
 
@@ -285,5 +295,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         }
 
     }
+
+
 
 }

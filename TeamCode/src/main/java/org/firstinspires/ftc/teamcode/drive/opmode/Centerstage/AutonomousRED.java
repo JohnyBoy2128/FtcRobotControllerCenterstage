@@ -4,15 +4,16 @@ package org.firstinspires.ftc.teamcode.drive.opmode.Centerstage;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "SimpleAutonomous", group = "Autonomous")
 public class SimpleAutonomous extends LinearOpMode {
 
     // Declare motors here
-     DcMotor motorFR = null;
-     DcMotor motorFL = null;
-     DcMotor motorBR = null;
-     DcMotor motorBL = null;
+    DcMotor motorFR = null;
+    DcMotor motorFL = null;
+    DcMotor motorBR = null;
+    DcMotor motorBL = null;
 
 
 
@@ -31,17 +32,17 @@ public class SimpleAutonomous extends LinearOpMode {
 
 
         // Set motor directions
-        motorFL.setDirection(DcMotor.Direction.REVERSE);
-        motorFR.setDirection(DcMotor.Direction.FORWARD);
-        motorBL.setDirection(DcMotor.Direction.FORWARD);
-        motorBR.setDirection(DcMotor.Direction.REVERSE);
+        motorFL.setDirection(DcMotor.Direction.FORWARD);
+        motorFR.setDirection(DcMotor.Direction.REVERSE);
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
+        motorBR.setDirection(DcMotor.Direction.FORWARD);
 
 
         waitForStart();
 
         // Autonomous actions
         driveLeft();
-        sleep(2500); // Pause for 1 secon
+        sleep(2700); // Pause for 1 secon
 
         // Stop all motors
         stopMotors();
@@ -64,10 +65,10 @@ public class SimpleAutonomous extends LinearOpMode {
     }
 
     private void driveLeft() {
-        motorFL.setPower(.5);
-        motorFR.setPower(.5);
-        motorBL.setPower(.5);
-        motorBR.setPower(.5);
+        motorFL.setPower(1);
+        motorFR.setPower(1);
+        motorBL.setPower(1);
+        motorBR.setPower(1);
     }
 
     private void stopMotors() {

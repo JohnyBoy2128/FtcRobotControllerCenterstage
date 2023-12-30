@@ -15,6 +15,9 @@ public class ScoringMechanism {
     private Servo servoRotatorR = null;
     private Servo servoHookL = null;
     private Servo servoHookR = null;
+    private Servo servoPixelPusher = null;
+    private Servo servoPlaneTrigger = null;
+    private Servo servoPlaneLauncher = null;
 
 
     // how many encoder tics make one full actuator motor rotation
@@ -42,6 +45,9 @@ public class ScoringMechanism {
         servoRotatorR = hwmap.get(Servo.class, "rotatorR");
         servoHookL = hwmap.get(Servo.class, "hookL");
         servoHookR = hwmap.get(Servo.class, "hookR");
+        servoPixelPusher = hwmap.get(Servo.class, "pixelPusher");
+        servoPlaneTrigger = hwmap.get(Servo.class, "planeTrigger");
+        servoPlaneLauncher = hwmap.get(Servo.class, "planeLauncher");
 
 
         // setup encoders on arm and worm gear motors
@@ -50,56 +56,34 @@ public class ScoringMechanism {
         motorActuator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // enables pwm for the grabber servos
-        //servoGrabberL.getController().pwmEnable();
-        //servoGrabberR.getController().pwmEnable();
-
     }
 
-    //methods for retrieving postiton information
+    // methods for retrieving postiton information
     public String getHookServoPosition() {
         return "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition());
+    }
+
+    //method for just finding out the position of plane launcher servo
+    public String getPlaneTriggerPosition() {
+        return "Plane Trigger Position: " + Double.toString(servoPlaneTrigger.getPosition());
     }
 
     // methods for opening and closing each servo
     // smaller numbers on the left servo are closed, while
     // smaller numbers on the right servo are open
-    public void closeLeftClaw() {
+    public void openLeftClaw() {
         servoGrabberL.setPosition(0.16);
     }
-    public void closeRightClaw() {
+    public void openRightClaw() {
         servoGrabberR.setPosition(0.92);
     }
-    public void openLeftClaw() {
+    public void closeLeftClaw() {
         servoGrabberL.setPosition(0.29);
     }
-    public void openRightClaw() {
+    public void closeRightClaw() {
         servoGrabberR.setPosition(0.79);
     }
 
-    //      CALIBRATION METHOD
-    // method to find out servo directions and such
-    public String calibrateServos(String state) {
-
-        // take different states passed to the method and move each
-        // servo clockwise and counterclockwise
-        if (state.equals("leftCounter")) {
-            servoHookL.setPosition(servoHookL.getPosition() + 0.01);      // Counterclockwise
-        }
-        if (state.equals("leftClock")) {
-            servoHookL.setPosition(servoHookL.getPosition() - 0.01);      // Clockwise
-        }
-        if (state.equals("rightCounter")) {
-            servoHookR.setPosition(servoHookR.getPosition() + 0.01);      // Counterclockwise
-        }
-        if (state.equals("rightClock")) {
-            servoHookR.setPosition(servoHookR.getPosition() - 0.01);      // Clockwise
-        }
-
-        // string containing each servos position
-        return "L: " + Double.toString(servoRotatorL.getPosition()) + ",  R: " + Double.toString(servoRotatorR.getPosition());
-
-    }
 
     public void extendActuator() {
         int currentActuatorPosition = motorActuator.getCurrentPosition();
@@ -126,8 +110,53 @@ public class ScoringMechanism {
         motorWormGear.setPower(1);
     }
 
-    public void moveHooks() {
 
+
+    public void liftPixelPusher() {
+        // Alright, need plane to move from 0 degrees to 90 degrees, giving around
+        // 0.00 - 0.50, adjusted for dead space is 0.15 - 0.65
+        //                                     (lifted) - (lowered)
+
+        // Take off hub, move servo, put hub on, test position.
+        // 0.15 is lifted, 0.65 is lowered
+    }
+
+    public void launchPlane() {
+        // Alright, 0 degrees to 45 degrees, 0.00 - 0.25,
+        // adjusted to 0.15 - 0.40. 0.40 is down, and 0.15 is up
+        //         (lifted) - (lowered)
+
+        servoPlaneLauncher.setPosition(0.25); // adjust
+        servoPlaneTrigger.setPosition(0.15);
+    }
+
+    //      CALIBRATION METHODS
+
+
+
+    // method to find out servo directions and such
+    public String calibrateServos(String state) {
+
+        // take different states passed to the method and move each
+        // servo clockwise and counterclockwise
+        if (state.equals("leftCounter")) {
+            servoHookL.setPosition(servoHookL.getPosition() + 0.01);      // Counterclockwise
+        }
+        if (state.equals("leftClock")) {
+            servoHookL.setPosition(servoHookL.getPosition() - 0.01);      // Clockwise
+        }
+        /*
+        if (state.equals("rightCounter")) {
+            servoHookR.setPosition(servoHookR.getPosition() + 0.01);      // Counterclockwise
+        }
+        if (state.equals("rightClock")) {
+            servoHookR.setPosition(servoHookR.getPosition() - 0.01);      // Clockwise
+        }
+
+         */
+
+        // string containing each servos position
+        return "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition());
 
     }
 
@@ -149,16 +178,14 @@ public class ScoringMechanism {
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
                 break;
-            /*
             case PICKUP:
                 actuatorLength = 0;
                 armHeight = -200;
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
-                hookLPosition = 90;
-                hookRPosition = 25;
-
-             */
+                //hookLPosition = 90;
+                //hookRPosition = 25;
+                break;
             case LEVEL1:
                 armHeight = -978;
                 actuatorLength = 2257;
@@ -180,8 +207,8 @@ public class ScoringMechanism {
             case HANG:
                 armHeight = -3817;
                 actuatorLength = 12153;
-                rotatorLPosition = 0.84;
-                rotatorRPosition = 0.16;
+                rotatorLPosition = 0.90;
+                rotatorRPosition = 0.12;
                 break;
         }
 
