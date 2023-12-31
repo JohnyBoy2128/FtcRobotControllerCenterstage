@@ -76,7 +76,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             doTelem();
 
             // extra methods for calibration
-            calibrateServos();
+            //calibrateServos();
 
             ////////            ENABLE FOR SCRIMMAGEEEEEEE                 ///////////
             calibrateMotors();
@@ -176,19 +176,19 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void updateGrabberServos() {
 
         // opens the left grabber with trigger, closes with more precise bumper button
-        if (currentGamepad2.left_trigger > .4) {
-            mechanism.closeLeftClaw();
+        if (currentGamepad2.left_trigger > .3) {
+            mechanism.openLeftClaw();
         }
         if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-            mechanism.openLeftClaw();
+            mechanism.closeLeftClaw();
         }
 
         // opens the right grabber with trigger, closes with more precise bumper button
-        if (currentGamepad2.right_trigger > .4) {
-            mechanism.closeRightClaw();
+        if (currentGamepad2.right_trigger > .3) {
+            mechanism.openRightClaw();
         }
         if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
-            mechanism.openRightClaw();
+            mechanism.closeRightClaw();
         }
 
     }
@@ -210,7 +210,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.triangle && !previousGamepad2.triangle) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL4AND5);
         }
-        if (currentGamepad2.guide && !previousGamepad2.guide) {
+        if (currentGamepad2.left_stick_button && !previousGamepad2.left_stick_button) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.HANG);
         }
 

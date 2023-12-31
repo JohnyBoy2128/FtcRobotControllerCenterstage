@@ -20,17 +20,6 @@ public class ScoringMechanism {
     private Servo servoPlaneLauncher = null;
 
 
-    // how many encoder tics make one full actuator motor rotation
-    static final double ARM_TICS_IN_ROT = 537.7;
-    // the number of mm the slides move from one motor rotation
-    static final double SLIDE_MM_FROM_ROT = 8.28;
-    // number of tics to move slide by 1cm
-    static final double ARM_TICS_IN_CM = ARM_TICS_IN_ROT / (SLIDE_MM_FROM_ROT / 10);
-
-    // the slide's level; 0-3, 0 being ground, 3 being highest pole
-    int slideLvl = 0;
-
-
     // called in CenterstageMainTeleOp to initialize servo and arm motors
     public void init(HardwareMap hwmap) {
 
@@ -57,10 +46,21 @@ public class ScoringMechanism {
         motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+-
 
-    // methods for retrieving postiton information
+
+    /*
+     *     _____      _   _               __  __      _   _               _
+     *    / ____|    | | | |             |  \/  |    | | | |             | |
+     *    | |  __  ___| |_| |_ ___ _ __   | \  / | ___| |_| |__   ___   __| |___
+     *    | | |_ |/ _ \ __| __/ _ \ '__|  | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
+     *    | |__| |  __/ |_| ||  __/ |     | |  | |  __/ |_| | | | (_) | (_| \__ \
+     *     \_____|\___|\__|\__\___|_|     |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
+
+
+     */
     public String getHookServoPosition() {
-        return "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition());
+        return "L Hook Position: " + Double.toString(servoHookL.getPosition()) + ",  R Hook Position: " + Double.toString(servoHookR.getPosition());
     }
 
     //method for just finding out the position of plane launcher servo
@@ -68,9 +68,19 @@ public class ScoringMechanism {
         return "Plane Trigger Position: " + Double.toString(servoPlaneTrigger.getPosition());
     }
 
+    /*
+     *     _____                     __  __      _   _               _
+     *    |  __ \                   |  \/  |    | | | |             | |
+     *    | |  | | ___   ___ _ __   | \  / | ___| |_| |__   ___   __| |___
+     *    | |  | |/ _ \ / _ \ '__|  | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
+     *    | |__| | (_) |  __/ |     | |  | |  __/ |_| | | | (_) | (_| \__ \
+     *    |_____/ \___/ \___|_|     |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
+     */
+
+
     // methods for opening and closing each servo
-    // smaller numbers on the left servo are closed, while
-    // smaller numbers on the right servo are open
+    // smaller numbers on the right servo are closed, while
+    // smaller numbers on the left servo are open
     public void openLeftClaw() {
         servoGrabberL.setPosition(0.16);
     }
@@ -85,6 +95,7 @@ public class ScoringMechanism {
     }
 
 
+    // methods for moving arm back to starting position at the start of each match
     public void extendActuator() {
         int currentActuatorPosition = motorActuator.getCurrentPosition();
         motorActuator.setTargetPosition(currentActuatorPosition + 538);
@@ -109,6 +120,24 @@ public class ScoringMechanism {
         motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorWormGear.setPower(1);
     }
+
+    // methods for just testing hook positions, to avoid error
+    public void restLeftHook() {
+        servoHookL.setPosition(0.80);
+    }
+    public void hangLeftHook() {
+        servoHookL.setPosition(0.29);
+    }
+    public void restRightHook() {
+        servoHookR.setPosition(0.21);
+    }
+    public void hangRightHook() {
+        servoHookR.setPosition(0.83);
+    }
+
+
+
+
 
 
 
@@ -167,8 +196,8 @@ public class ScoringMechanism {
         int actuatorLength = 0;
         double rotatorLPosition = 0.0;
         double rotatorRPosition = 0.0;
-        double hookLPosition = 88;
-        double hookRPosition = 25;
+        double hookLPosition = 0.8;
+        double hookRPosition = 0.21;
 
         // switch with each of the positions on the board for dropping the pixels
         switch (level) {
@@ -177,38 +206,56 @@ public class ScoringMechanism {
                 armHeight = 0;
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
                 break;
             case PICKUP:
                 actuatorLength = 0;
                 armHeight = -200;
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
-                //hookLPosition = 90;
-                //hookRPosition = 25;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
                 break;
             case LEVEL1:
                 armHeight = -978;
                 actuatorLength = 2257;
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
                 break;
             case LEVEL2AND3:
                 armHeight = -1574;
                 actuatorLength = 9515;
                 rotatorLPosition = 0.67;
                 rotatorRPosition = 0.36;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
                 break;
             case LEVEL4AND5:
                 armHeight = -1781;
                 actuatorLength = 12153;
                 rotatorLPosition = 0.69;
                 rotatorRPosition = 0.34;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
                 break;
             case HANG:
                 armHeight = -3817;
                 actuatorLength = 12153;
-                rotatorLPosition = 0.90;
-                rotatorRPosition = 0.12;
+                rotatorLPosition = 0.36;
+                rotatorRPosition = 0.66;
+                hookLPosition = 0.31;
+                hookRPosition = 0.81;
+                break;
+            case PULLUP:
+                armHeight = -3817;
+                actuatorLength = 9000;
+                rotatorLPosition = 0.36;
+                rotatorRPosition = 0.66;
+                hookLPosition = 0.31;
+                hookRPosition = 0.81;
                 break;
         }
 
@@ -239,7 +286,7 @@ public class ScoringMechanism {
         LEVEL2AND3,
         LEVEL4AND5,
         HANG,
-        STACK5,
+        PULLUP,
         STACK4,
         STACK3,
         STACK2
