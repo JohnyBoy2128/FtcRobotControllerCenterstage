@@ -126,13 +126,13 @@ public class ScoringMechanism {
         servoHookL.setPosition(0.80);
     }
     public void hangLeftHook() {
-        servoHookL.setPosition(0.29);
+        servoHookL.setPosition(0.31);
     }
     public void restRightHook() {
         servoHookR.setPosition(0.21);
     }
     public void hangRightHook() {
-        servoHookR.setPosition(0.83);
+        servoHookR.setPosition(0.81);
     }
 
 
@@ -143,50 +143,25 @@ public class ScoringMechanism {
 
     public void liftPixelPusher() {
         // Alright, need plane to move from 0 degrees to 90 degrees, giving around
-        // 0.00 - 0.50, adjusted for dead space is 0.15 - 0.65
+        // 0.00 - 0.33, adjusted for dead space is 0.15 - 0.48
         //                                     (lifted) - (lowered)
 
         // Take off hub, move servo, put hub on, test position.
-        // 0.15 is lifted, 0.65 is lowered
+        // 0.15 is lifted, 0.48 is lowered
+
+        servoPixelPusher.setPosition(0.15);
+    }
+    public void lowerPixelPusher() {
+        servoPixelPusher.setPosition(0.48);
     }
 
     public void launchPlane() {
-        // Alright, 0 degrees to 45 degrees, 0.00 - 0.25,
-        // adjusted to 0.15 - 0.40. 0.40 is down, and 0.15 is up
+        // Alright, 0 degrees to 45 degrees, 0.00 - 0.17,
+        // adjusted to 0.15 - 0.32. 0.32 is down, and 0.15 is up
         //         (lifted) - (lowered)
 
         servoPlaneLauncher.setPosition(0.25); // adjust
         servoPlaneTrigger.setPosition(0.15);
-    }
-
-    //      CALIBRATION METHODS
-
-
-
-    // method to find out servo directions and such
-    public String calibrateServos(String state) {
-
-        // take different states passed to the method and move each
-        // servo clockwise and counterclockwise
-        if (state.equals("leftCounter")) {
-            servoHookL.setPosition(servoHookL.getPosition() + 0.01);      // Counterclockwise
-        }
-        if (state.equals("leftClock")) {
-            servoHookL.setPosition(servoHookL.getPosition() - 0.01);      // Clockwise
-        }
-        /*
-        if (state.equals("rightCounter")) {
-            servoHookR.setPosition(servoHookR.getPosition() + 0.01);      // Counterclockwise
-        }
-        if (state.equals("rightClock")) {
-            servoHookR.setPosition(servoHookR.getPosition() - 0.01);      // Clockwise
-        }
-
-         */
-
-        // string containing each servos position
-        return "L: " + Double.toString(servoHookL.getPosition()) + ",  R: " + Double.toString(servoHookR.getPosition());
-
     }
 
 
@@ -241,7 +216,7 @@ public class ScoringMechanism {
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
-            case HANG:
+            case LIFTTOHANG:
                 armHeight = -3817;
                 actuatorLength = 12153;
                 rotatorLPosition = 0.36;
@@ -285,7 +260,7 @@ public class ScoringMechanism {
         LEVEL1,
         LEVEL2AND3,
         LEVEL4AND5,
-        HANG,
+        LIFTTOHANG,
         PULLUP,
         STACK4,
         STACK3,
