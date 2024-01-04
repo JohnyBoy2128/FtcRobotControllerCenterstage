@@ -44,6 +44,11 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         mechanism.closeLeftClaw();
         mechanism.closeRightClaw();
 
+        // **************       REMOVE WHEN ADDING AUTONOMOUS           ************
+        // lower the pixel pusher to load the purple pixel for autonomous
+        mechanism.lowerPixelPusher();
+
+
         // adds telemetry that the robot has been initialized
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -211,7 +216,10 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL4AND5);
         }
         if (currentGamepad2.left_stick_button && !previousGamepad2.left_stick_button) {
-            mechanism.moveToLevel(ScoringMechanism.boardLevels.HANG);
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.LIFTTOHANG);
+        }
+        if ( /* make some sort of button mapping */ ) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.PULLUP);
         }
 
     }
