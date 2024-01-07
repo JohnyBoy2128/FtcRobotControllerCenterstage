@@ -94,10 +94,10 @@ public class PlaneLauncherCalibration extends LinearOpMode {
 
             // ifs just for setting two different positions for launched and set
             if (currentGamepad2.square && !previousGamepad2.square) {
-                servoTrigger.setPosition( /* launch */);
+                //servoTrigger.setPosition( /* launch */);
             }
             if (currentGamepad2.triangle && !previousGamepad2.triangle) {
-                servoTrigger.setPosition( /* reset */);
+                //servoTrigger.setPosition( /* reset */);
             }
 
             // telemetry just to see the position

@@ -46,7 +46,6 @@ public class ScoringMechanism {
         motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
--
 
 
     /*

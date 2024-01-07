@@ -218,10 +218,11 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.left_stick_button && !previousGamepad2.left_stick_button) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LIFTTOHANG);
         }
-        if ( /* make some sort of button mapping */ ) {
+        /*
+        if ( /* make some sort of button mapping *\ ) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.PULLUP);
         }
-
+        */
     }
 
     // method to do all the math for the gamepad stick
@@ -252,35 +253,11 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // does the telemetry
     public void doTelem() {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Parallel encoder position: ", motorFR.getCurrentPosition());
         telemetry.addData("SPEED!!!", motorPowerFactor * 100);
         telemetry.update();
     }
 
-    public void calibrateServos() {
-        String telem = new String("");
-
-        // moves the left servo 0.01 ticks counterclockwise
-        if (currentGamepad1.left_bumper) {
-            telem = mechanism.calibrateServos("leftCounter");
-        }
-        // moves the left servo 0.01 ticks clockwise
-        if (currentGamepad1.right_bumper) {
-            telem = mechanism.calibrateServos("leftClock");
-        }
-        /*
-        // moves the right servo 0.01 ticks counterclockwise
-        if (currentGamepad1.right_trigger > .4) {
-            telem = mechanism.calibrateServos("rightCounter");
-        }
-        if (currentGamepad1.right_bumper) {
-            telem = mechanism.calibrateServos("rightClock");
-        }
-
-         */
-
-        telemetry.addData("Servo - ", mechanism.getHookServoPosition());
-
-    }
 
     public void calibrateMotors() {
 
