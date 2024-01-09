@@ -14,10 +14,13 @@ public class FirstAuto extends LinearOpMode {
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(24.00, -48.00, Math.toRadians(90.00)))
-                .splineTo(new Vector2d(48.00, -0.00), Math.toRadians(90.00))
+        Pose2d startPose = new Pose2d(24, -48, Math.toRadians(90));
+
+
+        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(24.00, -48.00, Math.toRadians(0)))
+                .splineTo(new Vector2d(48.00, -0.00), Math.toRadians(0))
                 .waitSeconds(1)
-                .splineTo(new Vector2d(31.00, 48.00), Math.toRadians(180.00))
+                .splineTo(new Vector2d(31.00, 48.00), Math.toRadians(90))
                 .waitSeconds(1)
                 .splineTo(new Vector2d(12.00, -0.00), Math.toRadians(-90.00))
                 .waitSeconds(1)
