@@ -6,29 +6,24 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "CS: First Auto", group = "Centerstage")
-public class FirstAuto extends LinearOpMode {
-
-    protected ScoringMechanism mechanism = new ScoringMechanism();
+@Autonomous(name = "Spline Up, Spline Down", group = "Centerstage")
+public class SplineUpSplineDown extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
-        // setting up basic stuff for start of match, where one pixel is loaded into the grabber, and one is on the pixel pusher
-        mechanism.lowerPixelPusher();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(24, -48, Math.toRadians(90));
 
+        drive.setPoseEstimate(startPose);
 
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(24, -48.00, Math.toRadians(90)))
-                .strafeRight(16)
+                .splineToConstantHeading(new Vector2d(48, 0), Math.toRadians(90))
                 .turn(Math.toRadians(90))
-                .splineTo(new Vector2d(24, -48), Math.toRadians(90))
+                .splineTo(new Vector2d(24, -48), Math.toRadians(180))
                 .build();
 
 

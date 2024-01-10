@@ -21,7 +21,7 @@ public class ScoringMechanism {
 
 
     // called in CenterstageMainTeleOp to initialize servo and arm motors
-    public void init(HardwareMap hwmap) {
+    public void init(HardwareMap hwmap, boolean resetMotorEncoders) {
 
             //  ARM MOTORS
         motorActuator = hwmap.get(DcMotor.class, "actuator");
@@ -38,12 +38,16 @@ public class ScoringMechanism {
         servoPlaneTrigger = hwmap.get(Servo.class, "planeTrigger");
         servoPlaneLauncher = hwmap.get(Servo.class, "planeLauncher");
 
+        if (resetMotorEncoders) {
+            // setup encoders on arm and worm gear motors
+            motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorWormGear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorActuator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
-        // setup encoders on arm and worm gear motors
-        motorActuator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorWormGear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorActuator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorWormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
     }
 

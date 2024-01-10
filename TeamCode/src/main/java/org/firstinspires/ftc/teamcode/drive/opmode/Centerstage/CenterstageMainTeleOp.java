@@ -16,7 +16,6 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     // setup class for grabber and arm movements
     protected ScoringMechanism mechanism = new ScoringMechanism();
 
-
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor motorFR = null;
@@ -94,7 +93,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void initMotorsAndServos() {
 
         // innitialize arm and servo motors
-        mechanism.init(hardwareMap);
+        mechanism.init(hardwareMap, false);
 
         // initialize the motor hardware variables
         //DRIVE MOTORS
