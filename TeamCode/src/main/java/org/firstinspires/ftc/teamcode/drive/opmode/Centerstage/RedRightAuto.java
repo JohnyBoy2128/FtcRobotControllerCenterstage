@@ -33,17 +33,19 @@ public class RedRightAuto extends LinearOpMode {
 
         // setting up basic stuff for start of match, where one pixel is loaded into the grabber, and one is on the pixel pusher
         mechanism.lowerPixelPusher();
+        mechanism.closeRightClaw();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(24, -48, Math.toRadians(90));
 
 
-        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(24, -48.00, Math.toRadians(90)))
-                .strafeRight(16)
-                .turn(Math.toRadians(90))
-                .splineTo(new Vector2d(24, -48), Math.toRadians(90))
-                .build();
+        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
+                .splineToConstantHeading(new Vector2d(22, -25), Math.toRadians(90))
+                .addTemporalMarker(() -> {mechanism.liftPixelPusher();})
+                .strafeRight(10)
+                .splineTo(new Vector2d(50, -40), Math.toRadians(270))
+                .build());
 
 
 

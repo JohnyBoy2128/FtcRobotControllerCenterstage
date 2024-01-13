@@ -23,7 +23,7 @@ public class StrafeRightMoveLeft extends LinearOpMode {
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(startPose)
                 .strafeRight(16)
                 .turn(Math.toRadians(90))
-                .splineTo(new Vector2d(24, -48), Math.toRadians(180))
+                .splineToSplineHeading(new Vector2d(24, -48), Math.toRadians(180))
                 .build();
 
 
