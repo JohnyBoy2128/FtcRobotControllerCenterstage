@@ -93,7 +93,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void initMotorsAndServos() {
 
         // innitialize arm and servo motors
-        mechanism.init(hardwareMap, false);
+        mechanism.init(hardwareMap, true);
 
         // initialize the motor hardware variables
         //DRIVE MOTORS
