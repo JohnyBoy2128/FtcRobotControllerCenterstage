@@ -22,10 +22,12 @@ public class RedLeftAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(12, -62, Math.toRadians(90));
 
 
-        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(22, -25), Math.toRadians(90))
-                .strafeRight(10)
-                .splineTo(new Vector2d(50, -40), Math.toRadians(270))
+        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(-36.53, -60.99, Math.toRadians(90.00)))
+                .lineTo(new Vector2d(-36.04, -20.98))
+                .lineTo(new Vector2d(-36.04, -25.19))
+                .lineTo(new Vector2d(-49.16, -32.80))
+                .lineTo(new Vector2d(-49.00, -13.20))
+                .lineTo(new Vector2d(58.72, -13.04))
                 .build();
 
 
