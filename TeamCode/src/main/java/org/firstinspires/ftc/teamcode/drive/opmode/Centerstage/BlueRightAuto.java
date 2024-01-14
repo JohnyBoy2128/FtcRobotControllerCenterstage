@@ -28,7 +28,7 @@ public class BlueRightAuto extends LinearOpMode {
                 .lineTo(new Vector2d(-49.16, 32.80))
                 .lineTo(new Vector2d(-49.00, 13.20))
                 .lineTo(new Vector2d(58.72, 13.04))
-                .build());
+                .build();
 
 
 
