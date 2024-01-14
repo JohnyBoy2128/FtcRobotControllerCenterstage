@@ -22,8 +22,6 @@ public class RedLeftAuto extends LinearOpMode {
         mechanism.closeRightClaw();
         mechanism.closeLeftClaw();
 
-        Pose2d startPose = new Pose2d(12, -62, Math.toRadians(90));
-
 
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(-36.53, -62.75, Math.toRadians(90.00)))
                 .lineTo(new Vector2d(-36.04, -20.98))
