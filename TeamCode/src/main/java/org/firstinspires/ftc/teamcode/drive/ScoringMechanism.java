@@ -214,7 +214,7 @@ public class ScoringMechanism {
                 hookRPosition = 0.21;
                 break;
             case LEVEL1:
-                armHeight = -322;
+                armHeight = 322;
                 actuatorLength = 2257;
                 rotatorLPosition = 0.65;
                 rotatorRPosition = 0.37;
