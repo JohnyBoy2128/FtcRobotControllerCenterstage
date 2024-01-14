@@ -300,7 +300,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         }
         if (currentGamepad1.dpad_left) {
             // left bumper pressed, decrease servo position
-            mechanism.moveServoMinusLittle();
+            mechanism.launchPlane();
         }
 
     }
