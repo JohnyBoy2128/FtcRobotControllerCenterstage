@@ -46,6 +46,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         // **************       REMOVE WHEN ADDING AUTONOMOUS           ************
         // lower the pixel pusher to load the purple pixel for autonomous
         mechanism.lowerPixelPusher();
+        mechanism.lowerPlaneLauncher();
 
 
         // adds telemetry that the robot has been initialized
