@@ -1,7 +1,6 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -13,11 +12,11 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
-                .setStartPose(new Pose2d(24,-48))
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(11.10, -61.80, Math.toRadians(90.00)))
-                        .splineTo(new Vector2d(20.75, -29.00), Math.toRadians(90.00))
-                        .build());
+                        drive.trajectorySequenceBuilder(new Pose2d(12, -62.75, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(57, -62.75, Math.toRadians(90.00)))
+                                .build());
+
 
 
 

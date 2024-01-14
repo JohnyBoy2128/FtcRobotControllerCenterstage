@@ -1,48 +1,24 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Centerstage;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Autonomous(name = "RedRightAuto", group = "Centerstage")
 public class RedRightAuto extends LinearOpMode {
 
-    // declaring basic vision stuff
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-    private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
-
-    // declaring ScoringMechanism object
-    protected ScoringMechanism mechanism = new ScoringMechanism();
-
-
-
     @Override
     public void runOpMode() {
 
-        // setting up basic stuff for start of match, where one pixel is loaded into the grabber, and one is on the pixel pusher
-        mechanism.lowerPixelPusher();
-        mechanism.closeRightClaw();
-
-        mechanism.lowerPlaneLauncher();
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(24, -48, Math.toRadians(90));
 
 
-        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(22, -25), Math.toRadians(90))
-                .addTemporalMarker(() -> {mechanism.liftPixelPusher();})
-                .strafeRight(10)
-                .splineTo(new Vector2d(50, -40), Math.toRadians(270))
+        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(12, -62.75, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(57, -62.75, Math.toRadians(90.00)))
                 .build();
 
 
