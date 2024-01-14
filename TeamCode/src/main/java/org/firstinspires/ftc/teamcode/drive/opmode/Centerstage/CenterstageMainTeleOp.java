@@ -80,7 +80,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
             doTelem();
 
             // extra methods for calibration
-            //calibrateServos();
+            calibrateServos();
 
             ////////            ENABLE FOR SCRIMMAGEEEEEEE                 ///////////
             calibrateMotors();
@@ -254,6 +254,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Parallel encoder position: ", motorFR.getCurrentPosition());
         telemetry.addData("SPEED!!!", motorPowerFactor * 100);
+        telemetry.addData("Arm Position", mechanism.getArmPosition());
+        telemetry.addData("Actuator Position", mechanism.getActuatorPosition());
+        telemetry.addData(":", mechanism.getPlaneTriggerPosition());
         telemetry.update();
     }
 
@@ -276,6 +279,28 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.dpad_right) {
             // left bumper pressed, decrease servo position
             mechanism.moveArmForward();
+        }
+
+    }
+
+    public void calibrateServos() {
+
+        // moves actuator motors by 1 rotation, and arm motors by 100 ticks
+        if (currentGamepad1.right_bumper) {
+            // right bumper pressed, increase motor position
+            mechanism.moveServoPlusBig();
+        }
+        if (currentGamepad1.left_bumper) {
+            // left bumper pressed, decrease servo position
+            mechanism.moveServoMinusBig();
+        }
+        if (currentGamepad1.dpad_right) {
+            // circle pressed, increase motor position
+            mechanism.moveServoPlusLittle();
+        }
+        if (currentGamepad1.dpad_left) {
+            // left bumper pressed, decrease servo position
+            mechanism.moveServoMinusLittle();
         }
 
     }

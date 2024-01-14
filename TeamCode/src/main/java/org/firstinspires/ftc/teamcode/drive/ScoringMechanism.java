@@ -17,7 +17,10 @@ public class ScoringMechanism {
     private Servo servoHookR = null;
     private Servo servoPixelPusher = null;
     private Servo servoPlaneTrigger = null;
-    private Servo servoPlaneLauncher = null;
+    private Servo servoAlignerL = null;
+    private Servo servoAlignerR = null;
+    private Servo servoTESTING = null;
+
 
 
     // called in CenterstageMainTeleOp to initialize servo and arm motors
@@ -36,7 +39,7 @@ public class ScoringMechanism {
         servoHookR = hwmap.get(Servo.class, "hookR");
         servoPixelPusher = hwmap.get(Servo.class, "pixelPusher");
         servoPlaneTrigger = hwmap.get(Servo.class, "planeTrigger");
-        servoPlaneLauncher = hwmap.get(Servo.class, "planeLauncher");
+        servoTESTING = hwmap.get(Servo.class, "testServo");
 
         if (resetMotorEncoders) {
             // setup encoders on arm and worm gear motors
@@ -68,8 +71,16 @@ public class ScoringMechanism {
 
     //method for just finding out the position of plane launcher servo
     public String getPlaneTriggerPosition() {
-        return "Plane Trigger Position: " + Double.toString(servoPlaneTrigger.getPosition());
+        return "Plane Trigger Position: " + servoPlaneTrigger.getPosition();
     }
+
+    public int getActuatorPosition(){
+        return motorActuator.getCurrentPosition();
+    }
+    public int getArmPosition() {
+        return motorWormGear.getCurrentPosition();
+    }
+
 
     /*
      *     _____                     __  __      _   _               _
@@ -139,6 +150,11 @@ public class ScoringMechanism {
     }
 
 
+    // methods for moving a test servo
+    public void moveServoPlusBig() {servoPixelPusher.setPosition(servoPixelPusher.getPosition() + 0.1);}
+    public void moveServoMinusBig() {servoPixelPusher.setPosition(servoPixelPusher.getPosition() - 0.1);}
+    public void moveServoPlusLittle() {servoPixelPusher.setPosition(servoPixelPusher.getPosition() + 0.01);}
+    public void moveServoMinusLittle() {servoPixelPusher.setPosition(servoPixelPusher.getPosition() - 0.01);}
 
 
 
@@ -163,8 +179,10 @@ public class ScoringMechanism {
         // adjusted to 0.15 - 0.32. 0.32 is down, and 0.15 is up
         //         (lifted) - (lowered)
 
-        servoPlaneLauncher.setPosition(0.25); // adjust
-        servoPlaneTrigger.setPosition(0.15);
+        servoPlaneTrigger.setPosition(0.50);
+    }
+    public void lowerPlaneLauncher() {
+        servoPlaneTrigger.setPosition(0.80);
     }
 
 
@@ -180,31 +198,31 @@ public class ScoringMechanism {
         // switch with each of the positions on the board for dropping the pixels
         switch (level) {
             case FLOOR:
+                armHeight = 1300;
                 actuatorLength = 0;
-                armHeight = 0;
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
             case PICKUP:
+                armHeight = 1100;
                 actuatorLength = 0;
-                armHeight = -200;
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
             case LEVEL1:
-                armHeight = -978;
+                armHeight = -322;
                 actuatorLength = 2257;
-                rotatorLPosition = 0.62;
-                rotatorRPosition = 0.40;
+                rotatorLPosition = 0.65;
+                rotatorRPosition = 0.37;
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
             case LEVEL2AND3:
-                armHeight = -1574;
+                armHeight = -274;
                 actuatorLength = 9515;
                 rotatorLPosition = 0.67;
                 rotatorRPosition = 0.36;
@@ -212,7 +230,7 @@ public class ScoringMechanism {
                 hookRPosition = 0.21;
                 break;
             case LEVEL4AND5:
-                armHeight = -1781;
+                armHeight = -481;
                 actuatorLength = 12153;
                 rotatorLPosition = 0.69;
                 rotatorRPosition = 0.34;
@@ -220,7 +238,7 @@ public class ScoringMechanism {
                 hookRPosition = 0.21;
                 break;
             case LIFTTOHANG:
-                armHeight = -3817;
+                armHeight = -2517;
                 actuatorLength = 12153;
                 rotatorLPosition = 0.36;
                 rotatorRPosition = 0.66;
@@ -228,7 +246,7 @@ public class ScoringMechanism {
                 hookRPosition = 0.81;
                 break;
             case PULLUP:
-                armHeight = -3817;
+                armHeight = -2517;
                 actuatorLength = 9000;
                 rotatorLPosition = 0.36;
                 rotatorRPosition = 0.66;

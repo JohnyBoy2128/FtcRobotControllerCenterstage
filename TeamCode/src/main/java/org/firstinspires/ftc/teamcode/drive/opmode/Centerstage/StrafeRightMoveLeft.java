@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Centerstage;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -23,7 +22,7 @@ public class StrafeRightMoveLeft extends LinearOpMode {
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(startPose)
                 .strafeRight(16)
                 .turn(Math.toRadians(90))
-                .splineToSplineHeading(new Vector2d(24, -48), Math.toRadians(180))
+                .splineToSplineHeading(new Pose2d(24, -48), Math.toRadians(180))
                 .build();
 
 

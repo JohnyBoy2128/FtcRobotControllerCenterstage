@@ -15,11 +15,10 @@ public class MeepMeepTesting {
                 .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
                 .setStartPose(new Pose2d(24,-48))
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(90)))
-                                .splineToConstantHeading(new Vector2d(22, -25), Math.toRadians(90))
-                                .strafeRight(10)
-                                .splineTo(new Vector2d(50, -40), Math.toRadians(270))
-                                .build());
+                        drive.trajectorySequenceBuilder(new Pose2d(11.10, -61.80, Math.toRadians(90.00)))
+                        .splineTo(new Vector2d(20.75, -29.00), Math.toRadians(90.00))
+                        .build());
+
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)

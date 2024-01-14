@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -28,12 +27,11 @@ public class RedRightAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        initAprilTag();
-
-
         // setting up basic stuff for start of match, where one pixel is loaded into the grabber, and one is on the pixel pusher
         mechanism.lowerPixelPusher();
         mechanism.closeRightClaw();
+
+        mechanism.lowerPlaneLauncher();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -45,7 +43,7 @@ public class RedRightAuto extends LinearOpMode {
                 .addTemporalMarker(() -> {mechanism.liftPixelPusher();})
                 .strafeRight(10)
                 .splineTo(new Vector2d(50, -40), Math.toRadians(270))
-                .build());
+                .build();
 
 
 
@@ -55,7 +53,7 @@ public class RedRightAuto extends LinearOpMode {
 
         drive.followTrajectorySequence(testTrack);
     }
-
+/*
     private void initAprilTag() {
 
         // Create the AprilTag processor.
@@ -72,5 +70,7 @@ public class RedRightAuto extends LinearOpMode {
         visionPortal = builder.build();
 
     }   // end method initAprilTag()
+
+ */
 
 }

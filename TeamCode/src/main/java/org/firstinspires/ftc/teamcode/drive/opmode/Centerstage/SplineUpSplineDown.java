@@ -16,15 +16,15 @@ public class SplineUpSplineDown extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(24, -48, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(12, -62, Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(24, -48.00, Math.toRadians(90)))
-                .splineToConstantHeading(new Vector2d(48, 0), Math.toRadians(90))
-                .turn(Math.toRadians(90))
-                .splineTo(new Vector2d(24, -48), Math.toRadians(180))
+        TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(12.00, -62.00, Math.toRadians(90.00)))
+                .splineTo(new Vector2d(20.75, -29.00), Math.toRadians(90.00))
                 .build();
+
+
 
 
 
