@@ -11,17 +11,17 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "RedLeftAuto", group = "Centerstage")
 public class RedLeftAuto extends LinearOpMode {
-    private ScoringMechanism mechanism = new ScoringMechanism();
 
+    private ScoringMechanism mechanism = new ScoringMechanism();
     @Override
     public void runOpMode() {
 
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        mechanism.init(hardwareMap, true);
 
         mechanism.closeRightClaw();
         mechanism.closeLeftClaw();
-
 
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(-36.53, -62.75, Math.toRadians(90.00)))
                 .lineTo(new Vector2d(-36.04, -20.98))

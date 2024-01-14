@@ -13,11 +13,12 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class BlueRightAuto extends LinearOpMode {
 
     private ScoringMechanism mechanism = new ScoringMechanism();
-
     @Override
     public void runOpMode() {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        mechanism.init(hardwareMap, true);
 
         mechanism.closeLeftClaw();
         mechanism.closeRightClaw();

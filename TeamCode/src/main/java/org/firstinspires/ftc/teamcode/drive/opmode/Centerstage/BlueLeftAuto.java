@@ -18,6 +18,8 @@ public class BlueLeftAuto extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
+        mechanism.init(hardwareMap, true);
+
         mechanism.closeRightClaw();
         mechanism.closeLeftClaw();
 
