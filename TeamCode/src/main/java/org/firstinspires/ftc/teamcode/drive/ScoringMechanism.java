@@ -216,8 +216,8 @@ public class ScoringMechanism {
             case LEVEL1:
                 armHeight = 322;
                 actuatorLength = 2257;
-                rotatorLPosition = 0.65;
-                rotatorRPosition = 0.37;
+                rotatorLPosition = 0.62;
+                rotatorRPosition = 0.40;
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
@@ -254,6 +254,7 @@ public class ScoringMechanism {
                 hookRPosition = 0.81;
                 break;
         }
+
 
         //setting the motor positions and powers for each level
         motorActuator.setTargetPosition(actuatorLength);
