@@ -6,17 +6,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name = "BlueRightAuto", group = "Centerstage")
 public class BlueRightAuto extends LinearOpMode {
+
+    private ScoringMechanism mechanism = new ScoringMechanism();
 
     @Override
     public void runOpMode() {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-
+        mechanism.closeLeftClaw();
+        mechanism.closeRightClaw();
 
         TrajectorySequence testTrack = drive.trajectorySequenceBuilder(new Pose2d(-36.00, 62.75, Math.toRadians(270.00)))
                 .lineTo(new Vector2d(-36.04, 20.98))
