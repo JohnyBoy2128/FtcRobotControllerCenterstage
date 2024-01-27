@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 
 
-@TeleOp(name="CS: 1 Driver TeleOp", group="Linear Opmode")
+@TeleOp(name="Centerstage GO!", group="Linear Opmode")
 //@Disabled
 public class CenterstageMainTeleOp extends LinearOpMode {
 
@@ -218,6 +218,9 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         if (currentGamepad2.left_stick_button && !previousGamepad2.left_stick_button) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.LIFTTOHANG);
         }
+        if (currentGamepad1.circle && !previousGamepad1.circle) {
+            mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION);
+        }
         /*
         if ( /* make some sort of button mapping *\ ) {
             mechanism.moveToLevel(ScoringMechanism.boardLevels.PULLUP);
@@ -257,7 +260,6 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         telemetry.addData("SPEED!!!", motorPowerFactor * 100);
         telemetry.addData("Arm Position", mechanism.getArmPosition());
         telemetry.addData("Actuator Position", mechanism.getActuatorPosition());
-        telemetry.addData(":", mechanism.getPlaneTriggerPosition());
         telemetry.update();
     }
 
@@ -289,15 +291,15 @@ public class CenterstageMainTeleOp extends LinearOpMode {
         // moves actuator motors by 1 rotation, and arm motors by 100 ticks
         if (currentGamepad1.right_bumper) {
             // right bumper pressed, increase motor position
-            mechanism.moveServoPlusBig();
+            mechanism.moveServoPlusLittle();
         }
         if (currentGamepad1.left_bumper) {
             // left bumper pressed, decrease servo position
-            mechanism.moveServoMinusBig();
+            mechanism.moveServoMinusLittle();
         }
         if (currentGamepad1.dpad_right) {
             // circle pressed, increase motor position
-            mechanism.moveServoPlusLittle();
+            mechanism.lowerPlaneLauncher();
         }
         if (currentGamepad1.dpad_left) {
             // left bumper pressed, decrease servo position

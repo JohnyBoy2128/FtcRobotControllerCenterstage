@@ -30,10 +30,10 @@ public class CenterstagePipeline extends OpenCvPipeline {
 
     // the bounds for detecting a specific color
     // they are made public static because then they can be edited with EOCV-Sim
-    public static Scalar lowerBound1 = new Scalar(0, 171, 0, 0);              // RED
-    public static Scalar upperBound1 = new Scalar(255, 255, 255, 255);
+    public static Scalar lowerBound1 = new Scalar(0, 151, 0, 0);              // RED
+    public static Scalar upperBound1 = new Scalar(130, 255, 255, 255);
 
-    public static Scalar lowerBound2 = new Scalar(0, 0, 160, 0);          // BLUE
+    public static Scalar lowerBound2 = new Scalar(0, 0, 141, 0);          // BLUE
     public static Scalar upperBound2 = new Scalar(255, 255, 255, 255);
 
 
@@ -195,12 +195,12 @@ public class CenterstagePipeline extends OpenCvPipeline {
         state = detectionStates.ONE;           // RIGHT SIDE
 
         // changes the state from ONE to TWO if the position of the prop is on the center line
-        if ((avgX1 >= 420 && avgX1 <= 560) && moments1.m00 > 6000) {                              // Based off of x = 490, about 8800 big
+        if ((avgX1 >= 120 && avgX1 <= 270) && moments1.m00 > 6000) {                              // Based off of x = 490, about 8800 big
             state = detectionStates.TWO;       // CENTER SIDE
         }
 
         // changes the state to THREE if the prop is on the right line
-        if ((avgX1 >= 130 && avgX1 <= 170) && moments1.m00 > 11000) {                             // Based off of x = 150, about 16000 big
+        if ((avgY1 >= 450 && avgY1 <= 550) && moments1.m00 > 11000) {                             // Based off of x = 150, about 16000 big
             state = detectionStates.THREE;     // LEFT SIDE
         }
 

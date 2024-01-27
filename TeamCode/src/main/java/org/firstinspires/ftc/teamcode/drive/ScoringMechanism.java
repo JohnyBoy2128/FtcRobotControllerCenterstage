@@ -96,16 +96,17 @@ public class ScoringMechanism {
     // smaller numbers on the right servo are closed, while
     // smaller numbers on the left servo are open
     public void openLeftClaw() {
-        servoGrabberL.setPosition(0.16);
-    }
-    public void openRightClaw() {
-        servoGrabberR.setPosition(0.92);
-    }
-    public void closeLeftClaw() {
         servoGrabberL.setPosition(0.29);
     }
-    public void closeRightClaw() {
+    public void openRightClaw() {
         servoGrabberR.setPosition(0.79);
+    }
+    public void closeLeftClaw() {
+        servoGrabberL.setPosition(0.16);
+    }
+    public void closeRightClaw() {
+        servoGrabberR.setPosition(0.92);
+
     }
 
 
@@ -198,7 +199,7 @@ public class ScoringMechanism {
         // switch with each of the positions on the board for dropping the pixels
         switch (level) {
             case FLOOR:
-                armHeight = 1300;
+                armHeight = 1340;
                 actuatorLength = 0;
                 rotatorLPosition = 0.78;
                 rotatorRPosition = 0.24;
@@ -221,6 +222,14 @@ public class ScoringMechanism {
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
+            case ZEROPOSITION:
+                armHeight = 0;
+                actuatorLength = 0;
+                rotatorLPosition = 0.62;
+                rotatorRPosition = 0.40;
+                hookLPosition = 0.80;
+                hookRPosition = 0.21;
+                break;
             case LEVEL2AND3:
                 armHeight = -274;
                 actuatorLength = 9515;
@@ -238,6 +247,11 @@ public class ScoringMechanism {
                 hookRPosition = 0.21;
                 break;
             case LIFTTOHANG:
+
+                closeRightClaw();
+                closeLeftClaw();
+                lowerPlaneLauncher();
+
                 armHeight = -2517;
                 actuatorLength = 12153;
                 rotatorLPosition = 0.36;
@@ -280,6 +294,7 @@ public class ScoringMechanism {
         FLOOR,
         PICKUP,
         LEVEL1,
+        ZEROPOSITION,
         LEVEL2AND3,
         LEVEL4AND5,
         LIFTTOHANG,

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Centerstage;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -11,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-abstract class BaseAuto extends LinearOpMode {
+public abstract class BaseAuto extends LinearOpMode {
     // the webcam
     OpenCvWebcam webcam;
     // the pipeline
@@ -29,11 +30,17 @@ abstract class BaseAuto extends LinearOpMode {
         CenterstagePipeline.detectionStates state = CenterstagePipeline.detectionStates.ONE;
         while (!opModeIsActive() && !isStopRequested()) {
             mechanism.closeRightClaw();
+            mechanism.closeLeftClaw();
+
             state = pipeline.getState();
             telemetry.addData("Detected State", state);
             telemetry.update();
         }
 
+        // simple conditional for setting the starting pose, because I think its necessary???
+
+        Pose2d startPose = startPoseSetter();
+        drive.setPoseEstimate(startPose);
 
         TrajectorySequence sequence = trajectorySequenceBuilder(state);
         waitForStart();
@@ -44,6 +51,7 @@ abstract class BaseAuto extends LinearOpMode {
     }
 
     public abstract TrajectorySequence trajectorySequenceBuilder(CenterstagePipeline.detectionStates detectionState);
+    public abstract Pose2d startPoseSetter();
 
     // Initializes the camera stuff.
     public void initCameraStuff() {
@@ -60,6 +68,7 @@ abstract class BaseAuto extends LinearOpMode {
             @Override
             public void onOpened() {
                 // Tell the webcam to start streaming images to us.
+                webcam.startStreaming(640, 480);
             }
 
             @Override
