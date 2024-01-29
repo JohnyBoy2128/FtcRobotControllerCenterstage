@@ -31,6 +31,7 @@ public abstract class BaseAuto extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             mechanism.closeRightClaw();
             mechanism.closeLeftClaw();
+            mechanism.lowerPlaneLauncher();
 
             state = pipeline.getState();
             telemetry.addData("Detected State", state);

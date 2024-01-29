@@ -20,7 +20,7 @@ public class MeepMeepTesting {
                                 .lineToConstantHeading(new Vector2d(24.00, -12.00))
                                 .lineToLinearHeading(new Pose2d(50.13, -36.20, Math.toRadians(0.00)))
                                 .lineToLinearHeading(new Pose2d(45, -36.20, Math.toRadians(0.00)))
-                                .turn(Math.toRadians(90))
+                                .turn(Math.toRadians(-90))
                                 .forward(24)
                                 .strafeRight(15)
                                 .build());

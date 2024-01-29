@@ -13,17 +13,18 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.CenterstagePipeline;
 
 @Config
-@Autonomous(name="Blue Left AUTO", group="Autos")
-public class BlueLeftAutoFINAL extends BaseAuto {
+@Autonomous(name="Red Far AUTO", group="Autos")
+public class RedFarAuto extends BaseAuto {
 
-    public static customPose2D boardRight = new customPose2D(50, 30, 0);
-    public static customPose2D boardCenter = new customPose2D(50, 36, 0);
-    public static customPose2D boardLeft = new customPose2D(50, 42.5, 0);
-    public static customPose2D lineRight = new customPose2D(0.75, 33, 180);
-    public static customPose2D lineCenter = new customPose2D(15, 24.5, 270);
-    public static customPose2D lineLeft = new customPose2D(23.5, 33, 270);
+    // POSITIONS GOOD
+    public static customPose2D boardRight = new customPose2D(51, -42.5, 0);
+    public static customPose2D boardCenter = new customPose2D(51, -36, 0);
+    public static customPose2D boardLeft = new customPose2D(51, -30, 0);
+    public static customPose2D lineRight = new customPose2D(-38.63, -36, 0);
+    public static customPose2D lineCenter = new customPose2D(-31.5, -39.63, 90);
+    public static customPose2D lineLeft = new customPose2D(-45.25, -47.88, 90);
 
-    public static customPose2D startPose = new customPose2D(12, 62.75, 270);
+    public static customPose2D startPose = new customPose2D(-36, -62.75, 90);
 
     @Override
     public TrajectorySequence trajectorySequenceBuilder(CenterstagePipeline.detectionStates detectionState) {
@@ -35,56 +36,86 @@ public class BlueLeftAutoFINAL extends BaseAuto {
                         .setConstraints(SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
-                        // moving toward the right line with the left pixel grabber
+                        // moving to the left spike mark
                         .splineTo(new Vector2d(lineRight.x, lineRight.y), Math.toRadians(lineRight.h))
+                        .forward(8)
+                        .back(8)
 
-                        // lower arm, open left grabber
+                        // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
                         .waitSeconds(1) // waiting so long jic, can be adjusted later
                         .addTemporalMarker(() -> mechanism.openLeftClaw())
+                        .waitSeconds(0.3)
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
-                        // moving away from pixel moving to board
-                        .lineToSplineHeading(new Pose2d(24, 48, Math.toRadians(270)))
+                        // moving to the middle
+                        .lineTo(new Vector2d(-36.00, -12.00))
 
-                        // pick up arm for board
+                        // lowering arm to not hit center beam
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
+                        .lineTo(new Vector2d(30.00, -12.00))
+
+                        // moving arm up to board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
 
-                        // move to right side of the board
-                        .lineToSplineHeading(new Pose2d(50.00, 30.00, Math.toRadians(0.00)))
+                        // moving to board
+                        .splineTo(new Vector2d(boardRight.x, boardRight.y), Math.toRadians(boardRight.h))
+
+                        // opening claw
+                        .addTemporalMarker(() -> mechanism.openRightClaw())
+                        .waitSeconds(0.3)
+
+                        // back up away from the board, and move toward the center of the field in the backstage area
+                        .splineToSplineHeading(new Pose2d(boardRight.x - 5, boardRight.y), Math.toRadians(boardRight.h))
+                        .turn(Math.toRadians(90))
+                        .forward(30)
+                        .strafeRight(15)
+
                         .build();
 
-
-            case TWO:       // OLD AUTO FOR TESTING
+            case TWO:       // CENTER SIDE
                 return drive.trajectorySequenceBuilder(new Pose2d(startPose.x, startPose.y, Math.toRadians(startPose.h)))
                         // setting the constraints for movement
                         .setConstraints(SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
-                        // moving toward the center line with the left pixel grabber
+                        // moving to center spike mark
                         .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
+                        .forward(8)
+                        .back(8)
 
-                        // lower arm, open left grabber
+                        // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
                         .waitSeconds(1) // waiting so long jic, can be adjusted later
                         .addTemporalMarker(() -> mechanism.openLeftClaw())
+                        .waitSeconds(0.3)
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
-                        // move right out of the way of the pixel, turn to board
-                        .lineTo(new Vector2d(30.00, 29.75))
+                        // moving back from line
+                        .lineToSplineHeading(new Pose2d(-54.00, -36.00, Math.toRadians(90.00)))
 
-                        // pick up arm for board
+                        // moving to middle
+                        .lineTo(new Vector2d(-54.00, -12.00))
+
+                        // lowering arm to not hit center beam
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
+                        .lineToConstantHeading(new Vector2d(24.00, -12.00))
+
+                        // moving arm up to board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
 
-                        // move to center of board
+                        // moving to board
                         .lineToLinearHeading(new Pose2d(boardCenter.x, boardCenter.y, Math.toRadians(boardCenter.h)))
 
-                        // open right grabber to drop pixel
+                        // opening claw
                         .addTemporalMarker(() -> mechanism.openRightClaw())
+                        .waitSeconds(0.3)
 
-                        // remove after auto testing, this is just for not havingt to reset the arm each time
-                        .waitSeconds(8)
-                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+                        // back up away from the board, and move toward the center of the field in the backstage area
+                        .splineToSplineHeading(new Pose2d(boardCenter.x - 5, boardCenter.y), Math.toRadians(boardCenter.h))
+                        .turn(Math.toRadians(90))
+                        .forward(24)
+                        .strafeRight(15)
 
                         .build();
 
@@ -96,31 +127,43 @@ public class BlueLeftAutoFINAL extends BaseAuto {
 
                         // moving up to the left spike mark
                         .splineTo(new Vector2d(lineLeft.x, lineLeft.y), Math.toRadians(lineLeft.h))
+                        .forward(8)
+                        .back(8)
 
                         // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
                         .waitSeconds(1) // waiting so long jic, can be adjusted later
                         .addTemporalMarker(() -> mechanism.openLeftClaw())
+                        .waitSeconds(0.3)
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
-                        // moving away from pixel, turning to 90
-                        .lineTo(new Vector2d(34.00, 42.87))
+                        // moving away from pixel
+                        .lineTo(new Vector2d(-57.42, -43.65))
 
-                        // moving arm up to board
+                        // moving to middle, moving right
+                        .lineTo(new Vector2d(-57.10, -12.00))
+
+                        // lowering arm to not hit center beam
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
+                        .lineTo(new Vector2d(24, -12.00))
+
+                        // lifting arm for board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
 
-                        // moving to the board
-                        .splineToSplineHeading(new Pose2d(boardLeft.x, boardLeft.y, Math.toRadians(boardLeft.h)), Math.toRadians(boardLeft.h))
+                        // moving to board
+                        .lineToLinearHeading(new Pose2d(boardLeft.x, boardLeft.y, Math.toRadians(boardLeft.h)))
 
                         // opening claw
                         .addTemporalMarker(() -> mechanism.openRightClaw())
+                        .waitSeconds(0.3)
 
-                        // remove after auto testing, this is just for not havingt to reset the arm each time
-                        .waitSeconds(8)
-                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+                        /// back up away from the board, and move toward the center of the field in the backstage area
+                        .splineToSplineHeading(new Pose2d(boardLeft.x - 5, boardLeft.y), Math.toRadians(boardLeft.h))
+                        .turn(Math.toRadians(90))
+                        .forward(18)
+                        .strafeRight(15)
 
                         .build();
-
 
         }
 

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 
 
-@TeleOp(name="Centerstage GO!", group="Linear Opmode")
+@TeleOp(name="ACenterstage GO!", group="Linear Opmode")
 //@Disabled
 public class CenterstageMainTeleOp extends LinearOpMode {
 
@@ -94,7 +94,7 @@ public class CenterstageMainTeleOp extends LinearOpMode {
     public void initMotorsAndServos() {
 
         // innitialize arm and servo motors
-        mechanism.init(hardwareMap, true);
+        mechanism.init(hardwareMap, false);
 
         // initialize the motor hardware variables
         //DRIVE MOTORS
