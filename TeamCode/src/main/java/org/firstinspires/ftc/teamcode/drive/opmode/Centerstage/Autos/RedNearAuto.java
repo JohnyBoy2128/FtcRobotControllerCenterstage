@@ -18,11 +18,11 @@ public class RedNearAuto extends BaseAuto {
 
     // POSITIONS GOOD
     public static customPose2D boardRight = new customPose2D(51, -42.5, 0);
-    public static customPose2D boardCenter = new customPose2D(51, -36, 0);
-    public static customPose2D boardLeft = new customPose2D(51, -30, 0);
+    public static customPose2D boardCenter = new customPose2D(51, -35.5, 0);
+    public static customPose2D boardLeft = new customPose2D(51, -28, 0);
     public static customPose2D lineRight = new customPose2D(25.25, -46.8, 90);
     public static customPose2D lineCenter = new customPose2D(18.5, -39, 90);
-    public static customPose2D lineLeft = new customPose2D(14.375, -33.5, 180);
+    public static customPose2D lineLeft = new customPose2D(14.375, -34.5, 180);
 
     public static customPose2D startPose = new customPose2D(12, -62.75, 90);
 
@@ -39,7 +39,7 @@ public class RedNearAuto extends BaseAuto {
                         // moving toward the right line with the left pixel grabber
                         .splineTo(new Vector2d(lineRight.x, lineRight.y), Math.toRadians(lineRight.h))
                         .forward(8)
-                        .back(8)
+                        .back(9)
 
                         // lower arm, open left grabber
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -68,6 +68,9 @@ public class RedNearAuto extends BaseAuto {
                         .forward(30)
                         .strafeRight(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
             case TWO:       // CENTER SIDE
@@ -79,7 +82,7 @@ public class RedNearAuto extends BaseAuto {
                         // moving toward the center line with the left pixel grabber
                         .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
                         .forward(8)
-                        .back(8)
+                        .back(10)
 
                         // lower arm, open left grabber
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -89,7 +92,7 @@ public class RedNearAuto extends BaseAuto {
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
                         // move right out of the way of the pixel, turn to board
-                        .lineTo(new Vector2d(30.00, -29.75))
+                        .lineTo(new Vector2d(30.00, -50))
 
                         // pick up arm for board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
@@ -107,6 +110,9 @@ public class RedNearAuto extends BaseAuto {
                         .forward(24)
                         .strafeRight(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
             case THREE:     // LEFT SIDE
@@ -117,8 +123,8 @@ public class RedNearAuto extends BaseAuto {
 
                         // moving toward the left line with the left pixel grabber
                         .splineTo(new Vector2d(lineLeft.x, lineLeft.y), Math.toRadians(lineLeft.h))
-                        .forward(6)
-                        .back(6)
+                        .forward(9)
+                        .back(11)
 
                         // lower arm, open left grabber
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -130,8 +136,9 @@ public class RedNearAuto extends BaseAuto {
                         // move right out of the way of the pixel, turn to board
                         .lineTo(new Vector2d(lineLeft.x + 12, lineLeft.y))
 
-                        // pick up arm for board
+                        // pick up arm for board, and close grabber to reach farther left
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
+                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
 
                         // move to left side of board
                         .lineTo(new Vector2d(lineLeft.x + 20, lineLeft.y))
@@ -146,6 +153,9 @@ public class RedNearAuto extends BaseAuto {
                         .turn(Math.toRadians(90))
                         .forward(18)
                         .strafeRight(15)
+
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
 
                         .build();
 

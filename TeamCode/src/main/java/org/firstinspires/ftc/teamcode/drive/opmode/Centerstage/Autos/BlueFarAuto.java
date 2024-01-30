@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.vision.CenterstagePipeline;
 @Autonomous(name="Blue Far AUTO", group="Autos")
 public class BlueFarAuto extends BaseAuto {
 
-    public static customPose2D boardRight = new customPose2D(51, 30, 0);
+    public static customPose2D boardRight = new customPose2D(51, 33, 0);
     public static customPose2D boardCenter = new customPose2D(51, 36, 0);
-    public static customPose2D boardLeft = new customPose2D(51, 42.5, 0);
-    public static customPose2D lineRight = new customPose2D(-49.25, 47.88, 270);
-    public static customPose2D lineCenter = new customPose2D(-41, 38.63, 270);
+    public static customPose2D boardLeft = new customPose2D(51, 45, 0);
+    public static customPose2D lineRight = new customPose2D(-49.25, 48.88, 270);
+    public static customPose2D lineCenter = new customPose2D(-43, 38.63, 270);
     public static customPose2D lineLeft = new customPose2D(-38.63, 36, 0);
 
     public static customPose2D startPose = new customPose2D(-36, 62.75, 270);
@@ -71,6 +71,9 @@ public class BlueFarAuto extends BaseAuto {
                         .forward(18)
                         .strafeLeft(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
 
@@ -82,8 +85,8 @@ public class BlueFarAuto extends BaseAuto {
 
                         // moving to center spike mark
                         .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
-                        .forward(8)
-                        .back(8)
+                        .forward(5)
+                        .back(5)
 
                         // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -102,8 +105,10 @@ public class BlueFarAuto extends BaseAuto {
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
                         .lineToConstantHeading(new Vector2d(24.00, 12.00))
 
-                        // moving arm up to board
+                        // moving arm up to board, and closing left grabber to go farther left
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
+                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
+
 
                         // moving to board
                         .lineToLinearHeading(new Pose2d(boardCenter.x, boardCenter.y, Math.toRadians(boardCenter.h)))
@@ -117,6 +122,9 @@ public class BlueFarAuto extends BaseAuto {
                         .turn(Math.toRadians(-90))
                         .forward(24)
                         .strafeLeft(15)
+
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
 
 
                         .build();
@@ -161,6 +169,9 @@ public class BlueFarAuto extends BaseAuto {
                         .turn(Math.toRadians(-90))
                         .forward(30)
                         .strafeLeft(15)
+
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
 
                         .build();
 

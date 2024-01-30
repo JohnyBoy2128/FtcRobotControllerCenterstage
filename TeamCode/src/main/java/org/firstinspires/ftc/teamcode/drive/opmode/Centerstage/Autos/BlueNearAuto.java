@@ -18,10 +18,10 @@ public class BlueNearAuto extends BaseAuto {
 
     public static customPose2D boardRight = new customPose2D(51, 30, 0);
     public static customPose2D boardCenter = new customPose2D(51, 36, 0);
-    public static customPose2D boardLeft = new customPose2D(51, 42.5, 0);
+    public static customPose2D boardLeft = new customPose2D(51, 43, 0);
     public static customPose2D lineRight = new customPose2D(15.375, 36, 180);
     public static customPose2D lineCenter = new customPose2D(6.5, 37.8, 270);
-    public static customPose2D lineLeft = new customPose2D(21.5, 46.86, 270);
+    public static customPose2D lineLeft = new customPose2D(22.5, 46.86, 270);
 
     public static customPose2D startPose = new customPose2D(12, 62.75, 270);
 
@@ -66,6 +66,9 @@ public class BlueNearAuto extends BaseAuto {
                         .forward(18)
                         .strafeLeft(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
 
@@ -107,6 +110,9 @@ public class BlueNearAuto extends BaseAuto {
                         .forward(24)
                         .strafeLeft(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
             case THREE:     // LEFT SIDE
@@ -130,8 +136,9 @@ public class BlueNearAuto extends BaseAuto {
                         // moving away from pixel, turning to 90
                         .lineTo(new Vector2d(34.00, 42.87))
 
-                        // moving arm up to board
+                        // moving arm up to board, and close left grabber to reach farther left
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
+                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
 
                         // moving to the board
                         .splineToSplineHeading(new Pose2d(boardLeft.x, boardLeft.y, Math.toRadians(boardLeft.h)), Math.toRadians(boardLeft.h))
@@ -145,6 +152,9 @@ public class BlueNearAuto extends BaseAuto {
                         .turn(Math.toRadians(-90))
                         .forward(30)
                         .strafeLeft(15)
+
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
 
                         .build();
 

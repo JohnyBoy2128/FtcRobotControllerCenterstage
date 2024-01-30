@@ -19,9 +19,9 @@ public class RedFarAuto extends BaseAuto {
     // POSITIONS GOOD
     public static customPose2D boardRight = new customPose2D(51, -42.5, 0);
     public static customPose2D boardCenter = new customPose2D(51, -36, 0);
-    public static customPose2D boardLeft = new customPose2D(51, -30, 0);
+    public static customPose2D boardLeft = new customPose2D(51, -28, 0);
     public static customPose2D lineRight = new customPose2D(-38.63, -36, 0);
-    public static customPose2D lineCenter = new customPose2D(-31.5, -39.63, 90);
+    public static customPose2D lineCenter = new customPose2D(-39.5, -38.63, 90);
     public static customPose2D lineLeft = new customPose2D(-45.25, -47.88, 90);
 
     public static customPose2D startPose = new customPose2D(-36, -62.75, 90);
@@ -39,7 +39,7 @@ public class RedFarAuto extends BaseAuto {
                         // moving to the left spike mark
                         .splineTo(new Vector2d(lineRight.x, lineRight.y), Math.toRadians(lineRight.h))
                         .forward(8)
-                        .back(8)
+                        .back(9)
 
                         // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -49,7 +49,7 @@ public class RedFarAuto extends BaseAuto {
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
                         // moving to the middle
-                        .lineTo(new Vector2d(-36.00, -12.00))
+                        .lineTo(new Vector2d(-37.00, -12.00))
 
                         // lowering arm to not hit center beam
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
@@ -71,6 +71,9 @@ public class RedFarAuto extends BaseAuto {
                         .forward(30)
                         .strafeRight(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
             case TWO:       // CENTER SIDE
@@ -81,8 +84,8 @@ public class RedFarAuto extends BaseAuto {
 
                         // moving to center spike mark
                         .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
-                        .forward(8)
-                        .back(8)
+                        .forward(5)
+                        .back(5)
 
                         // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -95,7 +98,7 @@ public class RedFarAuto extends BaseAuto {
                         .lineToSplineHeading(new Pose2d(-54.00, -36.00, Math.toRadians(90.00)))
 
                         // moving to middle
-                        .lineTo(new Vector2d(-54.00, -12.00))
+                        .lineTo(new Vector2d(-54.00, -8.00))
 
                         // lowering arm to not hit center beam
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
@@ -117,6 +120,9 @@ public class RedFarAuto extends BaseAuto {
                         .forward(24)
                         .strafeRight(15)
 
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
+
                         .build();
 
             case THREE:     // LEFT SIDE
@@ -128,7 +134,7 @@ public class RedFarAuto extends BaseAuto {
                         // moving up to the left spike mark
                         .splineTo(new Vector2d(lineLeft.x, lineLeft.y), Math.toRadians(lineLeft.h))
                         .forward(8)
-                        .back(8)
+                        .back(9)
 
                         // lower arm to the ground, open the left grabber, and move the arm back up
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -143,12 +149,14 @@ public class RedFarAuto extends BaseAuto {
                         // moving to middle, moving right
                         .lineTo(new Vector2d(-57.10, -12.00))
 
-                        // lowering arm to not hit center beam
+                        // lowering arm to not hit center beam,
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.PICKUP))
                         .lineTo(new Vector2d(24, -12.00))
 
-                        // lifting arm for board
+                        // lifting arm for board, and close left grabber to go farther left
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
+                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
+
 
                         // moving to board
                         .lineToLinearHeading(new Pose2d(boardLeft.x, boardLeft.y, Math.toRadians(boardLeft.h)))
@@ -162,6 +170,9 @@ public class RedFarAuto extends BaseAuto {
                         .turn(Math.toRadians(90))
                         .forward(18)
                         .strafeRight(15)
+
+                        .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
+
 
                         .build();
 
