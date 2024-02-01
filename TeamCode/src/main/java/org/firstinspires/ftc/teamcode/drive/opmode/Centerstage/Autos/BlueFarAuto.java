@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.vision.CenterstagePipeline;
 public class BlueFarAuto extends BaseAuto {
 
     public static customPose2D boardRight = new customPose2D(51, 33, 0);
-    public static customPose2D boardCenter = new customPose2D(51, 36, 0);
-    public static customPose2D boardLeft = new customPose2D(51, 45, 0);
+    public static customPose2D boardCenter = new customPose2D(51, 37, 0);
+    public static customPose2D boardLeft = new customPose2D(51, 46, 0);
     public static customPose2D lineRight = new customPose2D(-49.25, 48.88, 270);
     public static customPose2D lineCenter = new customPose2D(-43, 38.63, 270);
     public static customPose2D lineLeft = new customPose2D(-38.63, 36, 0);
@@ -107,8 +107,6 @@ public class BlueFarAuto extends BaseAuto {
 
                         // moving arm up to board, and closing left grabber to go farther left
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
-                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
-
 
                         // moving to board
                         .lineToLinearHeading(new Pose2d(boardCenter.x, boardCenter.y, Math.toRadians(boardCenter.h)))
@@ -132,7 +130,7 @@ public class BlueFarAuto extends BaseAuto {
             case THREE:     // LEFT SIDE
                 return drive.trajectorySequenceBuilder(new Pose2d(startPose.x, startPose.y, Math.toRadians(startPose.h)))
                         // setting the constraints for movement
-                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                         // moving up to the left spike mark
@@ -156,6 +154,7 @@ public class BlueFarAuto extends BaseAuto {
 
                         // moving arm up to board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
+                        .addTemporalMarker(() -> mechanism.closeLeftClaw())
 
                         // moving to board
                         .splineToSplineHeading(new Pose2d(boardLeft.x, boardLeft.y, Math.toRadians(boardLeft.h)), Math.toRadians(boardLeft.h))
