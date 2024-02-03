@@ -183,7 +183,7 @@ public class ScoringMechanism {
         servoPlaneTrigger.setPosition(0.50);
     }
     public void lowerPlaneLauncher() {
-        servoPlaneTrigger.setPosition(0.80);
+        servoPlaneTrigger.setPosition(0.90);
     }
 
 

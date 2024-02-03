@@ -79,9 +79,9 @@ public class BlueNearAuto extends BaseAuto {
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                         // moving toward the center line with the left pixel grabber
-                        .splineTo(new Vector2d(17.90, 25.36), Math.toRadians(270.00))
-                        .splineTo(new Vector2d(17.90, 38.36), Math.toRadians(270.00))
-                        .lineTo(new Vector2d(lineCenter.x, lineCenter.y))
+                        .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
+                        .forward(8)
+                        .back(10)
 
 
                         // lower arm, open left grabber
