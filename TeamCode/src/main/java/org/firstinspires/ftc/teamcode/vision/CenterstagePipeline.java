@@ -37,7 +37,7 @@ public class CenterstagePipeline extends OpenCvPipeline {
                 // J. M. Alexander Middle School
                 // (130, 255, 255, 255)
 
-    public static Scalar lowerBound2 = new Scalar(0, 0, 155, 0);          // BLUE
+    public static Scalar lowerBound2 = new Scalar(0, 0, 150, 0);          // BLUE
                 // J. M. Alexander Middle School
                 // (0, 0, 155, 0)
     public static Scalar upperBound2 = new Scalar(255, 255, 255, 255);
