@@ -91,14 +91,6 @@ public class ScoringMechanism {
      *    |_____/ \___/ \___|_|     |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
      */
 
-    // method to set motor power to slow speed, 0.1 for now, and full speed
-    public void setWormGearSpeedSlow() {
-        motorWormGear.setPower(0.1);
-    }
-    public void setWormGearSpeedFast() {
-        motorWormGear.setPower(1);
-    }
-
 
     // methods for opening and closing each servo
     // smaller numbers on the right servo are closed, while
@@ -224,7 +216,7 @@ public class ScoringMechanism {
                 break;
             case LEVEL1:
                 armHeight = 322;
-                actuatorLength = 2257;
+                actuatorLength = 4000; //2257
                 rotatorLPosition = 0.62;
                 rotatorRPosition = 0.40;
                 hookLPosition = 0.80;

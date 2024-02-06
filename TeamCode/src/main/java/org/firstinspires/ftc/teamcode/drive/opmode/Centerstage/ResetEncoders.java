@@ -29,23 +29,8 @@ public class ResetEncoders extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            // changing the motor speed to slow for whole loop
-            mechanism.setWormGearSpeedSlow();
-
-            // moves motor down while the distance is still too great
-            while (distance.getDistance(DistanceUnit.MM) > 50) {
-
-                mechanism.moveArmForward();
-
-            }
-
-            if (distance.getDistance(DistanceUnit.MM) <= 50) {
-                mechanism.setWormGearSpeedFast();
-            }
             telemetry.addData("distance", distance.getDistance(DistanceUnit.MM));
             telemetry.update();
-
-
 
             // If the distance in centimeters is less than 10, set the power to 0.3
             //if (distance.getDistance(DistanceUnit.CM) < 10)

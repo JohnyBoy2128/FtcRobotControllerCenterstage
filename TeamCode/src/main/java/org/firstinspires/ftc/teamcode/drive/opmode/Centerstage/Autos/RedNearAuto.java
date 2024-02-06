@@ -99,7 +99,6 @@ public class RedNearAuto extends BaseAuto {
 
                         // move to center of board
                         .lineToLinearHeading(new Pose2d(boardCenter.x, boardCenter.y, Math.toRadians(boardCenter.h)))
-
                         // open right grabber to drop pixel
                         .addTemporalMarker(() -> mechanism.openRightClaw())
                         .waitSeconds(0.3)

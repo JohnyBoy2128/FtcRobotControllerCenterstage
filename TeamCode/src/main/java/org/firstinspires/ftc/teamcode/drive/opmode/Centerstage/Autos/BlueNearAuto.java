@@ -38,7 +38,7 @@ public class BlueNearAuto extends BaseAuto {
                         // moving toward the right line with the left pixel grabber
                         .splineTo(new Vector2d(lineRight.x, lineRight.y), Math.toRadians(lineRight.h))
                         .forward(8)
-                        .back(8)
+                        .back(9.5)
 
                         // lower arm, open left grabber
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.FLOOR))
@@ -79,9 +79,11 @@ public class BlueNearAuto extends BaseAuto {
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                         // moving toward the center line with the left pixel grabber
-                        .splineTo(new Vector2d(lineCenter.x, lineCenter.y), Math.toRadians(lineCenter.h))
+                        .splineTo(new Vector2d(lineCenter.x + 10, lineCenter.y), Math.toRadians(lineCenter.h))
                         .forward(8)
                         .back(10)
+                        .lineTo(new Vector2d(lineCenter.x, lineCenter.y))
+
 
 
                         // lower arm, open left grabber
@@ -92,7 +94,7 @@ public class BlueNearAuto extends BaseAuto {
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.ZEROPOSITION))
 
                         // move right out of the way of the pixel, turn to board
-                        .lineTo(new Vector2d(30.00, 29.75))
+                        .lineTo(new Vector2d(30.00, 34.75))
 
                         // pick up arm for board
                         .addTemporalMarker(() -> mechanism.moveToLevel(ScoringMechanism.boardLevels.LEVEL1))
