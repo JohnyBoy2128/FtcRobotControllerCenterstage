@@ -29,6 +29,7 @@ public class ResetEncoders extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
+            // test
             telemetry.addData("distance", distance.getDistance(DistanceUnit.MM));
             telemetry.update();
 
