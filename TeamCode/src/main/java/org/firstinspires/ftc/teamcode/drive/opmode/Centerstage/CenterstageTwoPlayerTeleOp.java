@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.ScoringMechanism;
 
 
-@TeleOp(name="ACenterstage GO!", group="Linear Opmode")
+@TeleOp(name="CS: 2 Player TeleOp", group="Linear Opmode")
 //@Disabled
-public class CenterstageMainTeleOp extends LinearOpMode {
+public class CenterstageTwoPlayerTeleOp extends LinearOpMode {
 
     // setup class for grabber and arm movements
     protected ScoringMechanism mechanism = new ScoringMechanism();

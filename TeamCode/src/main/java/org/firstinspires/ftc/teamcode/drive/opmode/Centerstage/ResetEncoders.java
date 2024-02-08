@@ -24,17 +24,20 @@ public class ResetEncoders extends LinearOpMode {
         distance = hardwareMap.get(DistanceSensor.class, "distance");
         mechanism.init(hardwareMap, true);
 
+        // lower motor speed for this entire loop
+        mechanism.lowerWormGearSpeed();
 
         // Loop while the Op Mode is running
         waitForStart();
         while (opModeIsActive()) {
 
-            // test
             telemetry.addData("distance", distance.getDistance(DistanceUnit.MM));
             telemetry.update();
 
             // If the distance in centimeters is less than 10, set the power to 0.3
-            //if (distance.getDistance(DistanceUnit.CM) < 10)
+            if (distance.getDistance(DistanceUnit.CM) > 30) {
+                mechanism.moveArmForward();
+            }
         }
     }
 

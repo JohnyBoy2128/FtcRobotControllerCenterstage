@@ -125,13 +125,13 @@ public class ScoringMechanism {
     }
     public void moveArmBack() {
         int currentArmPosition = motorWormGear.getCurrentPosition();
-        motorWormGear.setTargetPosition(currentArmPosition + 100);
+        motorWormGear.setTargetPosition(currentArmPosition + 25);
         motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorWormGear.setPower(1);
     }
     public void moveArmForward() {
         int currentArmPosition = motorWormGear.getCurrentPosition();
-        motorWormGear.setTargetPosition(currentArmPosition - 100);
+        motorWormGear.setTargetPosition(currentArmPosition - 25);
         motorWormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorWormGear.setPower(1);
     }
@@ -186,6 +186,14 @@ public class ScoringMechanism {
         servoPlaneTrigger.setPosition(0.90);
     }
 
+    // methods to lower motor speeds
+    public void lowerWormGearSpeed() {
+        motorWormGear.setPower(0.1);
+    }
+    // methods to raise motor speeds to normal
+    public void raiseWormGearSpeed() {
+        motorWormGear.setPower(1);
+    }
 
     public void moveToLevel(boardLevels level) {
         // variables for each arm parts positions
@@ -238,6 +246,9 @@ public class ScoringMechanism {
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
+
+            /*
+            // Level 4 and 5 are just too high, not needed
             case LEVEL4AND5:
                 armHeight = -481;
                 actuatorLength = 12153;
@@ -246,6 +257,9 @@ public class ScoringMechanism {
                 hookLPosition = 0.80;
                 hookRPosition = 0.21;
                 break;
+
+             */
+
             case LIFTTOHANG:
 
                 closeRightClaw();
